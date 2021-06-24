@@ -55,7 +55,6 @@ class _MapsPageState extends State<MapsPage> {
     clients = await _clientService.fetchAll();
     clients.forEach((client) async {
       calculateDistance(client);
-      client.address =  await _addressService.fetchByUserKey(client.key);
       LatLng position = new LatLng(double.parse(client.address.location.latitude), double.parse(client.address.location.longitude));
       _markers.add(new Marker(
           markerId: MarkerId(client.hashCode.toString()),

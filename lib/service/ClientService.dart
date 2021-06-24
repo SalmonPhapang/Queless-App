@@ -21,11 +21,10 @@ class ClientService {
   }
   Future<Client> fetchByKey(key) async {
     Client client;
-    dio.get(path+'/fetch/$key').then((response) => {
-      if(response.statusCode == HttpStatus.ok){
-        client = Client.fromJson(response.data),
-      }
-    });
+    final response = await dio.get(path+'/fetch/$key');
+    if(response.statusCode == HttpStatus.ok){
+      client = Client.fromJson(response.data);
+    }
     return client;
   }
 }

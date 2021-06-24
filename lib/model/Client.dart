@@ -15,7 +15,7 @@ class Client{
       bio: json['bio'],
       email: json['email'],
       address: Address.fromJson(json['address']),
-      cellNumber: json['cellNumber'],
+      cellNumber: json['contactNumber'],
       website: json['website'],
       profileUrl: json['profileUrl'],
     );

@@ -6,7 +6,7 @@ class Address {
 
   Address({this.key,this.nickName,this.streetName,this.houseNumber,this.addressLine,this.city,this.suburb,this.province,this.code,this.location});
   String getFullAddress(){
-    return this.fullAddress = this.houseNumber +" "+ this.streetName + " "+  this.addressLine +","+ " "+ this.suburb + "," +" "+ this.province + " "+ this.code;
+    return this.fullAddress = this.houseNumber +" "+ this.streetName +","+ " "+ this.suburb + "," +" "+ this.province + " ";
   }
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
