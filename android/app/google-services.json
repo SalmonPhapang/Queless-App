@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "523974821786",
+    "firebase_url": "https://turnup-82c58.firebaseio.com",
+    "project_id": "turnup-82c58",
+    "storage_bucket": "turnup-82c58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523974821786:android:06cff6eab00fb7d1",
+        "android_client_info": {
+          "package_name": "com.turnup.flutter_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523974821786-b8gglcof33tm8p4ue8fl84v0hq8jr4q6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHJ74NzkmLILU4CMttxfiyUKnYybPx1cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523974821786-b8gglcof33tm8p4ue8fl84v0hq8jr4q6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
