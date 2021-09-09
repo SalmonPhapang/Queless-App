@@ -16,6 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -167,7 +168,7 @@ class _OrderSummaryState extends State<OrderSummary> {
      freshOrder.address = cart.address;
      cart.clearAll();
       progressDialog.hide();
-     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OrderTracker(order: freshOrder,willPop: false,)));
+     Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: freshOrder,willPop: false,)));
 
   }
 

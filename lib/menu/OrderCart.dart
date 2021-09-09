@@ -11,6 +11,9 @@ class OrderCart with ChangeNotifier {
   Address _address;
   Address get address => _address;
 
+  String _clientKey;
+  String get clientKey => _clientKey;
+
   double _subTotal;
   double get subTotal => _subTotal;
 
@@ -42,6 +45,10 @@ class OrderCart with ChangeNotifier {
 
   void setAddress(Address address){
     _address = address;
+    notifyListeners();
+  }
+  void setClientKey(String clientKey){
+    _clientKey = clientKey;
     notifyListeners();
   }
   void clear(OrderItem item) {

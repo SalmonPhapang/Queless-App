@@ -19,6 +19,16 @@ class ClientService {
     }
     return clients;
   }
+  Future<List<Client>> fetchCanOrder() async{
+    List<Client> clients = [];
+    final response = await dio.get(path+'/fetch/order');
+    if(response.statusCode == HttpStatus.ok){
+      for(var individualKey in response.data){
+        clients.add(Client.fromJson(individualKey));
+      }
+    }
+    return clients;
+  }
   Future<Client> fetchByKey(key) async {
     Client client;
     final response = await dio.get(path+'/fetch/$key');
@@ -26,5 +36,12 @@ class ClientService {
       client = Client.fromJson(response.data);
     }
     return client;
+  }
+  Future<bool> checkCoverage(String city) async {
+    final response = await dio.get(path+'/coverage/$city');
+    if(response.statusCode == HttpStatus.ok){
+      return response.data;
+    }
+    return false;
   }
 }

@@ -20,6 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -133,7 +134,7 @@ class _CartPageState extends State<CartPage> {
         Padding(
           padding: EdgeInsets.only(left: 10.sp,bottom: 10.sp),
           child: new Text(
-            'Service fee',
+            'Delivery fee',
             softWrap: true,
             style: new TextStyle(
                 fontSize: 13.0.sp,
@@ -299,7 +300,7 @@ class _CartPageState extends State<CartPage> {
                                   onTap: (){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => AddressPage(title: "Select Address",)),
+                                      PageTransition(type: PageTransitionType.rightToLeft, child:AddressPage(title: "Select Address",)),
                                     );
                                   },
                                   child: new Container(

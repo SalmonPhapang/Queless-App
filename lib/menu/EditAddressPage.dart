@@ -78,7 +78,6 @@ class _EditAddressPageState extends State<EditAddressPage> {
                       padding: new EdgeInsets.all(5.0.sp),
                       height: MediaQuery.of(context).size.height.sp,
                       child: new Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           TextFormField(
                             obscureText: false,

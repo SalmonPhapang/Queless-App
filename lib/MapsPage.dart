@@ -11,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:location_permissions/location_permissions.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 
 import 'model/Address.dart';
@@ -77,7 +77,7 @@ class _MapsPageState extends State<MapsPage> {
   @override
   Widget build(BuildContext context) {
     final topAppBar = NewGradientAppBar(
-      elevation: 0.1,
+      elevation: 0.1.sp,
       gradient: LinearGradient(colors: [Colors.cyan,Colors.indigo]),
       title: Text(widget.title),
     );
@@ -96,7 +96,7 @@ class _MapsPageState extends State<MapsPage> {
             child: Icon(Icons.my_location),
             backgroundColor: Color(0xFF03A0FE),
             mini: true,
-            elevation: 15.0,
+            elevation: 15.0.sp,
           ),
             alignment: Alignment.topRight,
           ),
@@ -138,18 +138,18 @@ class _MapsPageState extends State<MapsPage> {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 15.0),
-        height: 70.0,
+        margin: EdgeInsets.symmetric(vertical: 15.0.sp),
+        height: 70.0.sp,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: <Widget>[
-            Padding(padding: const EdgeInsets.all(5.0),
+            Padding(padding:  EdgeInsets.all(5.0.sp),
               child: clients.length != 0 ? ListView.builder(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
                   itemCount: clients.length,
                   itemBuilder: (context,int _index){
-                return Padding(padding: EdgeInsets.all(3.0),
+                return Padding(padding: EdgeInsets.all(3.0.sp),
                     child:  FadeIn((_index + 1).toDouble(),_boxes(clients[_index].profileUrl, double.parse(clients[_index].address.location.latitude),double.parse(clients[_index].address.location.longitude),clients[_index].name,clients[_index].address.suburb,clients[_index].address.city,clients[_index].distance))) ;
               }) : null
             ),
@@ -168,26 +168,26 @@ class _MapsPageState extends State<MapsPage> {
         child: new FittedBox(
           child: Material(
               color: Colors.white,
-              elevation: 15.0,
-              borderRadius: BorderRadius.circular(40.0),
+              elevation: 15.0.sp,
+              borderRadius: BorderRadius.circular(40.0.sp),
               shadowColor: Color(0x802196F3),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    width: 40,
-                    height: 40,
+                    width: 40.sp,
+                    height: 40.sp,
                     child: ClipRRect(
-                      borderRadius: new BorderRadius.only(topRight: Radius.circular(80.0),bottomRight: Radius.circular(80.0)),
+                      borderRadius: new BorderRadius.only(topRight: Radius.circular(80.0.sp),bottomRight: Radius.circular(80.0.sp)),
                       child: Image(
                         fit: BoxFit.cover,
                         image: CachedNetworkImageProvider(_image),
                       ),
                     ),),
                   Container(
-                    margin: EdgeInsets.only(right: 10.0),
+                    margin: EdgeInsets.only(right: 10.0.sp),
                     child: Padding(
-                      padding: const EdgeInsets.all(1.0),
+                      padding:  EdgeInsets.all(1.0.sp),
                       child: detailsContainer(restaurantName,suburb,address,distance),
                     ),
                   ),
@@ -204,12 +204,14 @@ class _MapsPageState extends State<MapsPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 2.0,right: 5.0),
+          padding: EdgeInsets.only(left: 2.0.sp,right: 5.0.sp),
           child: Container(
+          constraints: new BoxConstraints(
+          maxWidth: 50.sp),
               child: Text(restaurantName,
                 style: TextStyle(
                     color: Color(0xff6200ee),
-                    fontSize: 8.0,
+                    fontSize: 8.0.sp,
                     fontWeight: FontWeight.bold),
               )),
         ),
@@ -222,7 +224,7 @@ class _MapsPageState extends State<MapsPage> {
                       suburb,
                       style: TextStyle(
                         color: Colors.black87,
-                        fontSize: 5.0,
+                        fontSize: 5.0.sp,
                         fontWeight: FontWeight.bold,
                       ),
                     )),
@@ -233,7 +235,7 @@ class _MapsPageState extends State<MapsPage> {
               distance != null ? distance.round().toString()+" Km":"",
               style: TextStyle(
                 color: Colors.black87,
-                fontSize: 5.0,
+                fontSize: 5.0.sp,
                 fontWeight: FontWeight.bold,
               ),
             )),

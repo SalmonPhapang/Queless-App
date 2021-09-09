@@ -11,6 +11,7 @@ import 'package:flutter_app/service/UserService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 import 'NewAddressPage.dart';
@@ -61,7 +62,7 @@ class _AddressPageState extends State<AddressPage> {
                         new InkWell(
                           onTap: () =>{
                              bloc.setAddress(address[index]),
-                             Navigator.push(context, MaterialPageRoute(builder: (context) => OrderSummary()))
+                             Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary()))
                           },
                           child: Container(
                             margin:EdgeInsets.only(top: 10.0,right: 5.0),
@@ -84,7 +85,7 @@ class _AddressPageState extends State<AddressPage> {
                         ),
                         new InkWell(
                           onTap: () =>{
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddressPage(title: "Edit",address: address[index],)))
+                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: EditAddressPage(title: "Edit",address: address[index],)))
                           },
                           child: Container(
                             margin:EdgeInsets.only(top: 10.0,right: 5.0),
@@ -122,7 +123,7 @@ class _AddressPageState extends State<AddressPage> {
         child: Icon(Icons.add),
         backgroundColor: Color(0xFF03A0FE),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => NewAddressPage(title: "New Address Details"))).then(onBack);
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: NewAddressPage(title: "New Address Details"))).then(onBack);
         },
       ),
     );

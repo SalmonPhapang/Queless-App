@@ -131,11 +131,7 @@ class _ResultPageState extends State<ResultPage>{
                       ],
                     ),
                     new InkWell(
-                      onTap: () =>  Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomNavBar()),
-                              (Route<dynamic> route) => false
-                      ),
+                      onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
                       child: new Container(
                         width: 120.0,
                         height: 50.0,

@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/DetailsPage.dart';
 import 'package:flutter_app/OrderClientListPage.dart';
+import 'package:flutter_app/menu/ClientMenuPage.dart';
 import 'package:flutter_app/menu/Menu.dart';
+import 'package:flutter_app/menu/OrderCart.dart';
 import 'package:flutter_app/model/Client.dart';
 import 'package:flutter_app/model/Feed.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -20,11 +22,13 @@ import 'package:intl/intl.dart';
 import 'package:inview_notifier_list/inview_notifier_list.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'utils/BottomWaveClipper.dart';
+import 'menu/Cart.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -63,16 +67,21 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    var bloc = Provider.of<OrderCart>(context);
+    int totalCount = 0;
+    if (bloc.cart.length > 0) {
+      totalCount = bloc.cart.length;
+    }
     final topAppBar = NewGradientAppBar(
-      elevation: 0.1,
+      elevation: 0.1.sp,
       gradient: LinearGradient(colors: [Colors.cyan,Colors.indigo]),
       title: Text(widget.title),
       actions: <Widget>[
         IconButton(
           icon: Image.asset('assets/images/take-away.png'),
-          iconSize: 5.0,
+          iconSize: 5.0.sp,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MenuPage(title: "Catalogue")),);
+            Navigator.push(context,PageTransition(type: PageTransitionType.rightToLeft, child: ClientMenuPage(title: "Order From")),);
           },
         )
       ],
@@ -111,6 +120,18 @@ class _HomePageState extends State<HomePage> {
           }
         },
       )
+      ),
+      floatingActionButton: new Visibility(
+        visible: totalCount > 0,
+        child: new FloatingActionButton(
+          backgroundColor:  Colors.orange,
+          splashColor: Colors.blue,
+          onPressed: ()=> Navigator.push(
+            context, PageTransition(type: PageTransitionType.rightToLeft, child:CartPage()),
+          ),
+          tooltip: 'Cart',
+          child: new Icon(Icons.shopping_cart),
+        ),
       ),
     );//Scarfold
 
@@ -163,13 +184,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget PostsUI(bool inView,int index,String clientKey,String name,String bio,String city,String suburb,String profileUrl,String image,String date,bool isVideo,Map menu){
     return new Card(
-      elevation: 5.0,
+      elevation: 5.0.sp,
       shadowColor: Colors.grey[100],
       child: new Container(
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 10.0,),
             isVideo != true ?  Stack(
               children: <Widget>[
                 //Center(child: Image.asset('assets/loader2.gif',height:60.0,fit: BoxFit.fitWidth,)),
@@ -178,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(title: "Details",uniqueKey: clientKey,)),);
                   },
                   child:new Image(
-                    height: 350,
+                    height: 350.sp,
                     width: MediaQuery.of(context).size.width,
                     fit: BoxFit.cover,
                     image: CachedNetworkImageProvider(image),
@@ -187,7 +207,7 @@ class _HomePageState extends State<HomePage> {
 
               ],
             ) : new Container(
-                height: 300,
+                height: 300.sp,
                 width: double.infinity,
                 child: VideoWidget(play:inView,url: image)
             ),
@@ -202,9 +222,9 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(title: "Details",uniqueKey: clientKey,)),);
                         },
                         child : Container(
-                          width: 65.0,
-                          height: 65.0,
-                          margin: EdgeInsets.all(8.0),
+                          width: 65.0.sp,
+                          height: 65.0.sp,
+                          margin: EdgeInsets.all(8.0.sp),
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
                             image: new DecorationImage(
@@ -217,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                         child: new Text(
                           name,
                           style: new TextStyle(
-                              fontSize: 17.0,
+                              fontSize: 17.0.sp,
                               color: Colors.black87,
                               fontWeight: FontWeight.bold
                           ),
@@ -225,14 +245,14 @@ class _HomePageState extends State<HomePage> {
                         )
                     ),
                     new Container(
-                        margin: EdgeInsets.all(8.0),
+                        margin: EdgeInsets.all(8.0.sp),
                         child: new Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             new Text(
                               suburb,
                               style: new TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 10.0.sp,
                                   color: Colors.black54,
                                   fontWeight: FontWeight.bold
                               ),
@@ -241,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                             new Text(
                               city,
                               style: new TextStyle(
-                                  fontSize: 10.0,
+                                  fontSize: 10.0.sp,
                                   color: Colors.black54,
                                   fontWeight: FontWeight.bold
                               ),
@@ -255,11 +275,11 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
         new Container(
-          margin: EdgeInsets.all(10.0),
+          margin: EdgeInsets.all(10.0.sp),
         child:  new Text(
             bio,
           style: new TextStyle(
-              fontSize: 10.0,
+              fontSize: 10.0.sp,
               color: Colors.grey,
               fontWeight: FontWeight.bold
           ),

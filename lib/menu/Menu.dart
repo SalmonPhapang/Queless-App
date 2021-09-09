@@ -10,6 +10,7 @@ import 'package:flutter_app/service/MenuItemService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:badges/badges.dart';
 import 'package:provider/provider.dart';
@@ -17,9 +18,10 @@ import "package:collection/collection.dart";
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MenuPage extends StatefulWidget {
-  MenuPage({Key key, this.title}) : super(key: key);
+  MenuPage({Key key, this.title,this.clientKey}) : super(key: key);
 
   final String title;
+  final String clientKey;
 
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -27,8 +29,9 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin {
   List<MenuItem> menus = [];
+  List<String> categories = [];
   Map<String,List<MenuItem>> drinksMenu;
-  Map<String,List<MenuItem>> foodMenu;
+  Map<String,List<MenuItem>> menu;
   TabController tabController;
 
   MenuItemService _menuItemService = new MenuItemService();
@@ -77,38 +80,17 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
           ),
         )
       ],
-      bottom: TabBar(
-        tabs: <Widget>[
-          Tab(child: Text("Food",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.0.sp,
-                fontFamily: "Calibre-Semibold",
-              )),),
-          Tab(child: Text("Drinks",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.0.sp,
-                fontFamily: "Calibre-Semibold",
-              )),),
-        ],
-        indicatorColor:Colors.white ,
-        controller: tabController,
-      ),
     );
 
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: topAppBar,
-        body:TabBarView(
-        controller: tabController,
-        children: <Widget>[
-          Center(child: FutureBuilder(
+        body: Center(child: FutureBuilder(
             future: findMenu(),
             builder: (context,snapshot){
               if(snapshot.hasData){
                 return new CustomScrollView(
-                    slivers: this.foodMenu.entries.map((e) =>
+                    slivers: this.menu.entries.map((e) =>
                         SliverStickyHeader.builder(
                           builder: (context, state) => Container(
                             height: 40.0.sp,
@@ -136,51 +118,15 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
               }
             },
           )),
-          Center(child: FutureBuilder(
-            future: findMenu(),
-            builder: (context,snapshot){
-              if(snapshot.hasData){
-                return new CustomScrollView(
-                    slivers: this.drinksMenu.entries.map((e) =>
-                        SliverStickyHeader.builder(
-                          builder: (context, state) => Container(
-                            height: 40.0.sp,
-                            color: Colors.white.withOpacity(1.0 - state.scrollPercentage),
-                            padding: EdgeInsets.symmetric(horizontal: 16.0.sp),
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              e.key,
-                              style: TextStyle(color: Colors.grey[700]),
-                            ),
-                          ),
-                          sliver: SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                                  (context, i) => MenuUI(e.value[i]),
-                              childCount: e.value.length,
-                            ),
-                          ),
-                        )).toList());
-
-
-              }else if(snapshot.hasError){
-                return Text("${snapshot.error}");
-              }else{
-                return SpinKitCubeGrid(color: Color(0xffff5722));
-              }
-            },
-          ))
-        ])
     );
   }
 
   Future<Map<String,List<MenuItem>>> findMenu() async{
-    menus = await _menuItemService.fetchAll();
-    List<MenuItem> foodMenu = menus.where((element) => element.inventoryType.contains("FOOD")).toList();
-    this.foodMenu = groupBy(foodMenu, (item) => item.categoryType);
-
-    List<MenuItem> drinksMenu = menus.where((element) => element.inventoryType.contains("DRINKS")).toList();
-    this.drinksMenu = groupBy(drinksMenu, (item) => item.categoryType);
-    return this.foodMenu;
+    menus = await _menuItemService.fetchByClient(widget.clientKey);
+    this.menu = groupBy(menus, (item) => item.categoryType);
+    // List<MenuItem> drinksMenu = menus.where((element) => element.inventoryType.contains("DRINKS")).toList();
+    // this.drinksMenu = groupBy(drinksMenu, (item) => item.categoryType);
+    return this.menu;
   }
 
   Widget MenuUI(MenuItem menuItem){
@@ -204,7 +150,8 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                    image: CachedNetworkImageProvider(menuItem.image),
                  ),
                ),
-               new Expanded(child: Column(
+               new Expanded(child:
+               Column(
                    crossAxisAlignment:CrossAxisAlignment.start ,
                    children: <Widget>[
                      Padding(

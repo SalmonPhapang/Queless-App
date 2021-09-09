@@ -20,6 +20,7 @@ import 'dart:math';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 import 'model/Feed.dart';
 import 'service/CheckInService.dart';
 
@@ -292,7 +293,7 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
             size: 20.0.sp,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage(title: "Settings",)),);
+            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SettingsPage(title: "Settings",)),);
           },
         )
       ],
@@ -519,7 +520,7 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
                                                         ),
                                                         InkWell(
                                                             onTap: ()=>{
-                                                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderTracker(order: orders[index],willPop: true,)))
+                                                              Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: orders[index],willPop: true,)))
                                                             },
                                                             child: Padding(
                                                               padding: const EdgeInsets.only(

@@ -98,7 +98,7 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
             size: 20.0.sp,
           ),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavBar()),);
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
         ) : Container()
       ],

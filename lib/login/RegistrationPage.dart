@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/adddress/AddressSearchPage.dart';
 import 'package:flutter_app/auth/Authentication.dart';
 import 'package:flutter_app/enums/Topics.dart';
 import 'package:flutter_app/model/Credentials.dart';
@@ -90,7 +91,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _name = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
           hintText: "First Name",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );//nameField
@@ -104,7 +104,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _lastName = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
           hintText: "Last Name",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );//nameField
@@ -118,7 +117,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _mobile = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
           hintText: "Cell Number",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );//nameField
@@ -132,7 +130,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _email = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
           hintText: "Email",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );//emailField
@@ -146,7 +143,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _password = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
           hintText: "Password",
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
@@ -161,8 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         _password = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0.sp, 15.0.sp, 20.0.sp, 15.0.sp),
-          hintText: "Password",
+          hintText: "Confrim Password",
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );// passwordField
@@ -196,7 +191,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         FirebaseMessaging.instance.subscribeToTopic(Topics.PROMOTIONS);
         FirebaseMessaging.instance.subscribeToTopic(Topics.MARKETING);
         progressDialog.hide();
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AddressAddPage(title: "Add Address",user: user,)),);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AddressSearchPage(title: "Find Address",user: user,)),);
       }else{
         Fluttertoast.showToast(msg: "UserName with email already exists, Please go to login "+_email,toastLength: Toast.LENGTH_LONG);
       }
@@ -281,7 +276,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   )),
               SizedBox(height: 5.0.sp,),
               Container(
-                width: 250.0.sp,
+                width: MediaQuery.of(context).size.width.sp,
+                margin: EdgeInsets.only(top:5.0.sp,left: 5.0.sp,right: 5.0.sp),
+                height: 50.0.sp,
                 child:  FlatButton(
                   onPressed: (){
                     _validateForm();
@@ -297,7 +294,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   color: Colors.blue,
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(18.0.sp),
+                      borderRadius: new BorderRadius.circular(10.0.sp),
                       side: BorderSide(color: Colors.blue)
                   ),
                 ),

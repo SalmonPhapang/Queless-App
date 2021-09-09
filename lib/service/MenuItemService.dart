@@ -28,7 +28,14 @@ class MenuItemService {
     }
     return menuItem;
   }
-  Future<List<Feed>> fetchByClient(key) async {
-    dio.get(path + '/fetch/client/$key');
+  Future<List<MenuItem>> fetchByClient(key) async {
+    List<MenuItem> items = [];
+    final response = await dio.get(path+'/fetch/client/$key');
+    if(response.statusCode == HttpStatus.ok){
+      for(var individualKey in response.data){
+        items.add(MenuItem.fromJson(individualKey));
+      }
+    }
+    return items;
   }
 }

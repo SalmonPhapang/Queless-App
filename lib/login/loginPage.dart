@@ -14,11 +14,14 @@ import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:math';
+
+import 'RegistrationStep.dart';
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
 
@@ -29,20 +32,30 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  TextStyle style = TextStyle(fontFamily: 'san-serif', fontSize: 20.0.sp);
+  TextStyle style = TextStyle(
+      fontFamily: 'san-serif',
+      fontSize: 20.0.sp,
+      color: Colors.grey
+    );
   UserService userService = new UserService();
   AuthenticationService authenticationService = new AuthenticationService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   String _email;
   String _password;
-
+  bool _showPassword = false;
   @override
   void initState() {
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    void _toggleVisibility() {
+      setState(() {
+        _showPassword = !_showPassword;
+        print('toggle '+_showPassword.toString());
+      });
+    }
     String validatePassword(String value){
       String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
       RegExp regExp = new RegExp(pattern);
@@ -71,12 +84,12 @@ class _LoginPageState extends State<LoginPage> {
         _email = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+          labelText: "Email",
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0.sp))),
     );//emailField
     final passwordField = TextFormField(
-      obscureText: true,
+      obscureText: !_showPassword,
       style: style,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
@@ -85,12 +98,18 @@ class _LoginPageState extends State<LoginPage> {
         _password = value;
       },
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+          labelText: "Password",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp)),
+          suffixIcon: InkWell(
+            onTap: () {
+              _toggleVisibility();
+            },
+            child: Icon(
+              _showPassword ? Icons.visibility : Icons
+                  .visibility_off, color: Colors.blueAccent,),
+          ),),
     );// passwordField
-    ProgressDialog progressDialog = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: true, showLogs: false);
+    ProgressDialog progressDialog = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
     progressDialog.style(
         message: 'Signing In...',
         borderRadius: 10.0,
@@ -122,12 +141,12 @@ class _LoginPageState extends State<LoginPage> {
           prefs.setString('userKey', userKey);
 
           progressDialog.hide();
-          Fluttertoast.showToast(msg: "Welcome back "+_email,toastLength: Toast.LENGTH_LONG);
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomNavBar()),);
+          Fluttertoast.showToast(msg: "Welcome back "+user.name,toastLength: Toast.LENGTH_LONG);
+          Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: BottomNavBar()),);
         }
       }else{
         progressDialog.hide();
-        Fluttertoast.showToast(msg: 'invalid Credentials entered, Please enter correct userName and password',toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(msg: 'invalid Credentials entered, Please enter correct username and password',toastLength: Toast.LENGTH_LONG);
         progressDialog.hide();
       }
     }
@@ -195,7 +214,9 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Container(
-                width: 200.sp,
+                width: MediaQuery.of(context).size.width.sp,
+                margin: EdgeInsets.only(top:10.0.sp,left: 10.0.sp,right: 10.0.sp),
+                height: 50.0.sp,
                 child: FlatButton(
                   onPressed: (){
                     _validateForm();
@@ -211,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   color: Colors.blue,
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(18.0),
+                      borderRadius: new BorderRadius.circular(10.0),
                       side: BorderSide(color: Colors.blue)
                   ),
                 ),
@@ -239,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(top:20.sp),
                 child:  InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(title: "Register",)),);
+                      Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child:RegistrationStepPage(title: "Register",)),);
                     },
                     child: new Center(child:  Text.rich(
                         TextSpan(
@@ -265,24 +286,6 @@ class _LoginPageState extends State<LoginPage> {
                     )
                 ),
               ),
-
-//          Transform(
-//            transform: Matrix4.rotationX(pi),
-//            alignment: Alignment.bottomCenter,
-//              child: new ClipPath(
-//                clipper: BottomWaveClipper(),
-//                child: Container(
-//                  decoration: BoxDecoration(
-//                    gradient: LinearGradient(
-//                        colors: TopWaveClipper.orangeGradients,
-//                        begin: Alignment.topLeft,
-//                        end: Alignment.center),
-//                  ),
-//                  height: ScreenUtil().setHeight(60),
-//                  width:MediaQuery.of(context).size.width ,
-//                ),
-//              ),//ClipPath
-//            ),
             ]
         ),
       )

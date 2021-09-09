@@ -178,16 +178,24 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                     ),
                     elevation: 10.0,
                     onPressed: () {
-                      if(bloc.addToCart(widget.item,quantity)) {
-                        Fluttertoast.showToast(msg: "Item(s) added to order",
-                            toastLength: Toast.LENGTH_SHORT,
-                            textColor: Colors.white);
-                        Navigator.pop(context);
+                      if(bloc.clientKey == null || bloc.clientKey.contains(widget.item.clientKey)){
+                        bloc.setClientKey(widget.item.clientKey);
+                        if(bloc.addToCart(widget.item,quantity)) {
+                          Fluttertoast.showToast(msg: "Item(s) added to order",
+                              toastLength: Toast.LENGTH_SHORT,
+                              textColor: Colors.white);
+                          Navigator.pop(context);
+                        }else{
+                          Fluttertoast.showToast(msg: "Cannot order duplicate items ",
+                              toastLength: Toast.LENGTH_SHORT,
+                              textColor: Colors.white);
+                        }
                       }else{
-                        Fluttertoast.showToast(msg: "Cannot order duplicate items ",
+                        Fluttertoast.showToast(msg: "Cannot order from multiple restaurants",
                             toastLength: Toast.LENGTH_SHORT,
                             textColor: Colors.white);
                       }
+
                     },
                     color: Colors.blue,
                     textColor: Colors.white,
