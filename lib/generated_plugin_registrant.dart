@@ -11,7 +11,6 @@ import 'package:fluttertoast/fluttertoast_web.dart';
 import 'package:geolocator_web/geolocator_web.dart';
 import 'package:google_sign_in_web/google_sign_in_web.dart';
 import 'package:location_web/location_web.dart';
-import 'package:package_info_plus_web/package_info_plus_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:video_player_web/video_player_web.dart';
 import 'package:wakelock_web/wakelock_web.dart';
@@ -27,7 +26,6 @@ void registerPlugins(Registrar registrar) {
   GeolocatorPlugin.registerWith(registrar);
   GoogleSignInPlugin.registerWith(registrar);
   LocationWebPlugin.registerWith(registrar);
-  PackageInfoPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   VideoPlayerPlugin.registerWith(registrar);
   WakelockWeb.registerWith(registrar);

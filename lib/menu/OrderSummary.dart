@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/auth/Authentication.dart';
 import 'package:flutter_app/menu/OrderTracking.dart';
 import 'package:flutter_app/model/MenuItem.dart';
+import 'package:flutter_app/model/NotificationDTO.dart';
 import 'package:flutter_app/model/Order.dart';
 import 'package:flutter_app/model/OrderItem.dart';
 import 'package:flutter_app/model/User.dart';
 import 'package:flutter_app/service/AddressService.dart';
+import 'package:flutter_app/service/NotificationService.dart';
 import 'package:flutter_app/service/OrderService.dart';
 import 'package:flutter_app/service/UserService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
@@ -38,6 +40,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   UserService userService = new UserService();
   OrderService orderService = new OrderService();
   AddressService addressService = new AddressService();
+  NotificationService notificationService = new NotificationService();
   User _user;
   ProgressDialog progressDialog;
 
@@ -158,17 +161,33 @@ class _OrderSummaryState extends State<OrderSummary> {
     String userKey = await auth.getCurrentUser();
     Order order = new Order.from(
         userKey: userKey,
+        clientKey: cart.clientKey,
         addressKey: cart.address.key,
         fee: fee,
         subTotal: itemTotal,
         total: total,
         orderItems: cart.cart);
      String orderKey = await orderService.save(order);
-     Order freshOrder = await orderService.fetchByKey(orderKey);
-     freshOrder.address = cart.address;
-     cart.clearAll();
-      progressDialog.hide();
-     Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: freshOrder,willPop: false,)));
+      if(orderKey != null && orderKey.isNotEmpty){
+        Order freshOrder = await orderService.fetchByKey(orderKey);
+
+        NotificationDTO notification = new NotificationDTO();
+        notification.userType = 'Client';
+        notification.title = "New Order";
+        notification.message = "New order placed "+ freshOrder.orderNumber;
+        notification.userKey = order.clientKey;
+        await notificationService.send(notification);
+
+        freshOrder.address = cart.address;
+        cart.clearAll();
+        progressDialog.hide();
+        Navigator.pushAndRemoveUntil(
+          context,
+          PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: freshOrder,willPop: false,)),
+              (route) => false,
+        );
+      }
+
 
   }
 

@@ -8,6 +8,7 @@ import 'package:flutter_app/widgets/Avatar.dart';
 import 'package:flutter_app/widgets/ProgressBar.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 class OrderTracker extends StatefulWidget {
   OrderTracker({Key key, this.order,this.willPop}) : super(key: key);
   final bool willPop;
@@ -98,7 +99,11 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
             size: 20.0.sp,
           ),
           onPressed: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
+            Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(type: PageTransitionType.rightToLeft, child: BottomNavBar()),
+                  (route) => false,
+            );
           },
         ) : Container()
       ],

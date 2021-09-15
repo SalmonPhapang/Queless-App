@@ -142,7 +142,11 @@ class _LoginPageState extends State<LoginPage> {
 
           progressDialog.hide();
           Fluttertoast.showToast(msg: "Welcome back "+user.name,toastLength: Toast.LENGTH_LONG);
-          Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: BottomNavBar()),);
+          Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(type: PageTransitionType.rightToLeft, child: BottomNavBar()),
+                (route) => false,
+          );
         }
       }else{
         progressDialog.hide();

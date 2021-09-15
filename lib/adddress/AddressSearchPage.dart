@@ -9,7 +9,6 @@ import 'package:flutter_app/service/AddressService.dart';
 import 'package:flutter_app/service/ClientService.dart';
 import 'package:flutter_app/utils/BottomWaveClipper.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';

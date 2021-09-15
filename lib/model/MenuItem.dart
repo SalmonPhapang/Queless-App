@@ -2,9 +2,9 @@ class MenuItem{
   String key,clientKey,name,description,inventoryType,categoryType,image,specialKey,date,size;
   double price;
   int quantity;
-  bool archived;
+  bool archived,available;
 
-  MenuItem({this.key,this.clientKey,this.name,this.description,this.date,this.size,this.image,this.inventoryType,this.categoryType,this.specialKey,this.price,this.quantity,this.archived});
+  MenuItem({this.key,this.clientKey,this.name,this.description,this.date,this.size,this.image,this.inventoryType,this.categoryType,this.specialKey,this.price,this.quantity,this.archived,this.available});
   factory MenuItem.fromJson(Map<String, dynamic> json) {
     return MenuItem(
       key: json['key'],
@@ -20,6 +20,7 @@ class MenuItem{
       price:json['price'],
       quantity:json['quantity'],
       archived:json['archived'],
+      available:json['available'],
     );
   }
 }
