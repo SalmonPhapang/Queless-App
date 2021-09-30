@@ -132,7 +132,38 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
   }
   List<Row> generateOrderTotals(Order order){
     List<Row> rows = new List<Row>();
+    rows.add(new Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 10.sp,bottom: 10.sp),
+          child: new Text(
+            'Type',
+            softWrap: true,
+            style: new TextStyle(
+                fontSize: 13.0.sp,
+                color: Colors.black87,
+                fontWeight: FontWeight.normal
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 20.sp,bottom: 10.sp),
+          child: new Text(
+            order.delivery ? "Delivery":"Collection",
+            softWrap: true,
+            style: new TextStyle(
+                fontSize: 13.0.sp,
+                color: Colors.black87,
+                fontWeight: FontWeight.normal
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
 
+      ],
+    ));
     rows.add(new Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -162,8 +193,10 @@ class _StoryState extends State<Story> with SingleTickerProviderStateMixin {
             textAlign: TextAlign.end,
           ),
         ),
+
       ],
     ));
+
     rows.add(new Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[

@@ -3,8 +3,9 @@ import 'package:flutter_app/model/Location.dart';
 class Address {
   String key,userKey,houseNumber,streetName,addressLine,city,suburb,province,code,nickName,fullAddress;
   Location location;
+  bool primary;
 
-  Address({this.key,this.userKey,this.nickName,this.streetName,this.houseNumber,this.addressLine,this.city,this.suburb,this.province,this.code,this.location});
+  Address({this.key,this.userKey,this.nickName,this.streetName,this.houseNumber,this.addressLine,this.city,this.suburb,this.province,this.code,this.primary,this.location});
   String getFullAddress(){
     return this.fullAddress = this.houseNumber +" "+ this.streetName + " "+  this.addressLine +","+ " "+ this.suburb + "," +" "+ this.province + " "+ this.code;
   }
@@ -20,6 +21,7 @@ class Address {
       suburb: json['suburb'],
       province: json['province'],
       code: json['code'],
+      primary: json['primary'],
       location: Location.fromJson(json['location'])
     );
   }
@@ -33,6 +35,7 @@ class Address {
     'suburb': suburb,
     'province':province,
     'code':code,
+    'primary':primary,
     'location':location,
   };
 }

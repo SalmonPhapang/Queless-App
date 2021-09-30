@@ -16,7 +16,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 class RegistrationStepPage extends StatefulWidget {
   RegistrationStepPage({Key key, this.title}) : super(key: key);
 
@@ -188,6 +188,7 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
     );//emailField
     final passwordField = TextFormField(
       obscureText: true,
+      controller: password,
       style: style,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
@@ -202,6 +203,7 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
     );// passwordField
     final confirmPasswordField = TextFormField(
       obscureText: true,
+      controller: confirmpassword,
       style: style,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
@@ -351,6 +353,21 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
                       Padding(
                         padding:  EdgeInsets.only(top: 10.0.sp),
                         child: passwordField,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2.0.sp),
+                        child: new FlutterPwValidator(
+                            controller: password,
+                            minLength: 8,
+                            uppercaseCharCount: 1,
+                            numericCharCount: 1,
+                            specialCharCount: 1,
+                            width: 400.sp,
+                            height: 130.sp,
+                            onSuccess: ()=>{
+
+                            }
+                        ),
                       ),
                       Padding(
                         padding:  EdgeInsets.only(top: 10.0.sp),

@@ -7,9 +7,10 @@ class Order{
   String key,userKey,clientKey,addressKey,orderNumber,orderTime,preparedTime,collectedTime,orderStatus;
   double fee,subTotal,total,driverTip;
   List<OrderItem> orderItems;
+  bool collection,delivery;
   Address address;
 
-  Order({this.key,this.userKey,this.clientKey,this.addressKey,this.orderNumber,this.orderTime,this.preparedTime,this.collectedTime,this.orderStatus,this.fee,this.subTotal,this.total,this.driverTip,this.orderItems});
+  Order({this.key,this.userKey,this.clientKey,this.addressKey,this.orderNumber,this.orderTime,this.preparedTime,this.collectedTime,this.orderStatus,this.fee,this.subTotal,this.total,this.driverTip,this.orderItems, this.collection,this.delivery});
   Order.from({this.userKey,this.clientKey,this.addressKey,this.fee,this.subTotal,this.total,this.driverTip,this.orderItems});
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,8 @@ class Order{
       orderNumber: json['orderNumber'],
       orderTime: json['orderTime'],
       preparedTime: json['preparedTime'],
+      collection: json['collection'],
+      delivery: json['delivery'],
       collectedTime: json['collectedTime'],
       orderStatus: json['orderStatus'],
       fee: json['fee'],
@@ -33,6 +36,8 @@ class Order{
     'userKey': userKey,
     'clientKey': clientKey,
     'addressKey': addressKey,
+    'collection': collection,
+    'delivery': delivery,
     'fee': fee,
     'subTotal': subTotal,
     'total':total,

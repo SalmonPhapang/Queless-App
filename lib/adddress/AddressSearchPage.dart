@@ -86,12 +86,17 @@ class _AddressSearchPageState extends State<AddressSearchPage> {
       address.streetName = placemark.street;
       address.province = placemark.administrativeArea;
       address.addressLine = placemark.subAdministrativeArea;
+      address.primary = true;
       address.userKey = await auth.getCurrentUser();
       bool isSaved = await addressService.save(this.address);
       if(isSaved){
         progressDialog.hide();
         Fluttertoast.showToast(msg: "Welcome "+ widget.user.name,toastLength: Toast.LENGTH_LONG);
-        Navigator.pushReplacement(context,PageTransition(type: PageTransitionType.rightToLeft, child:BottomNavBar()),);
+        Navigator.pushAndRemoveUntil(
+          context,
+          PageTransition(type: PageTransitionType.rightToLeft, child: BottomNavBar()),
+              (route) => false,
+        );
       }
     }
     return Scaffold(

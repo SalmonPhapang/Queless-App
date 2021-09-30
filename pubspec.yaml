@@ -11,7 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.1.0
+version: 1.3.0+5
 
 environment:
   sdk: ">=2.5.2 <3.0.0"
@@ -64,6 +64,9 @@ dependencies:
   geocoding: ^2.0.0
   page_transition: ^2.0.2
   introduction_screen: ^2.1.0
+  flutter_pw_validator: ^1.2.1
+  flutter_otp: ^0.3.2
+  otp_text_field: ^1.1.1
   flutter:
     sdk: flutter
 
@@ -116,6 +119,8 @@ flutter:
   - assets/images/ordering-food.jpg
   - assets/images/scooter.jpg
   - assets/images/food.jpg
+  - assets/images/cloud.png
+  - assets/images/store.jpg
   - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

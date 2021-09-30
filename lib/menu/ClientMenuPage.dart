@@ -48,7 +48,15 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
      }
      setState(() {});
   }
-
+  int calculateDeliveryFee(int distance){
+    if(distance <= 5){
+      return 10;
+    }else if(distance > 5 && distance <= 10){
+      return 20;
+    }else{
+      return 30;
+    }
+  }
   calculateDistance(Client client) async{
     double distance =  await Geolocator.distanceBetween(_position.latitude, _position.longitude, double.parse(client.address.location.latitude), double.parse(client.address.location.longitude));
     clients.sort((a, b) {
@@ -125,6 +133,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                       children: <Widget>[
                                         InkWell(
                                           onTap: () {
+                                            bloc.setDeliveryFee(calculateDeliveryFee(clients[index].distance.round()).toDouble());
                                             Navigator.push(
                                               context,
                                               PageTransition(type: PageTransitionType.rightToLeft, child:
@@ -278,17 +287,34 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                         ),
                                       ],
                                     ), //Row
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 18.0.sp,bottom: 5.0.sp),
-                                      child: Text(
-                                        clients[index].distance.round().toString()+" Km",
-                                        style: new TextStyle(
-                                            fontSize: 10.0.sp,
-                                            color: Colors.grey[600],
-                                            fontWeight:
-                                            FontWeight.bold),
-                                        textAlign: TextAlign.start,
-                                      ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 18.0.sp,bottom: 10.0.sp),
+                                          child: Text(
+                                            clients[index].distance.round().toString()+" Km",
+                                            style: new TextStyle(
+                                                fontSize: 10.0.sp,
+                                                color: Colors.grey[700],
+                                                fontWeight:
+                                                FontWeight.bold),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 10.0.sp,bottom: 10.0.sp),
+                                          child: Text(
+                                            "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString(),
+                                            style: new TextStyle(
+                                                fontSize: 10.0.sp,
+                                                color: Colors.grey[700],
+                                                fontWeight:
+                                                FontWeight.bold),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        )
+                                      ],
                                     )
                                   ], //[Widget]
                                 ), //Column
@@ -297,7 +323,8 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                               ],
                             );
                           }) :
-                     Center(child:SpinKitCubeGrid(color: Color(0xffff5722)))
+                     Center(
+                         child:SpinKitCubeGrid(color: Color(0xffff5722)))
                 ));
   }
 }

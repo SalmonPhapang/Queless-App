@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/auth/Authentication.dart';
 import 'package:flutter_app/menu/OrderTracking.dart';
 import 'package:flutter_app/model/MenuItem.dart';
-import 'package:flutter_app/model/NotificationDTO.dart';
+import 'package:flutter_app/model/NotificationDTO.dart' as dto;
 import 'package:flutter_app/model/Order.dart';
 import 'package:flutter_app/model/OrderItem.dart';
 import 'package:flutter_app/model/User.dart';
@@ -167,12 +167,20 @@ class _OrderSummaryState extends State<OrderSummary> {
         subTotal: itemTotal,
         total: total,
         orderItems: cart.cart);
+      if(cart.orderTypeMethod.contains("Collection")){
+        order.collection = true;
+        order.delivery = false;
+      }else{
+        order.collection = false;
+        order.delivery = true;
+      }
+
      String orderKey = await orderService.save(order);
       if(orderKey != null && orderKey.isNotEmpty){
         Order freshOrder = await orderService.fetchByKey(orderKey);
 
-        NotificationDTO notification = new NotificationDTO();
-        notification.userType = 'Client';
+        dto.Notification notification = new dto.Notification();
+        notification.userType = 'CLIENT';
         notification.title = "New Order";
         notification.message = "New order placed "+ freshOrder.orderNumber;
         notification.userKey = order.clientKey;
@@ -270,7 +278,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                             : '',
                                         softWrap: true,
                                         style: new TextStyle(
-                                          fontSize: 13.0.sp,
+                                          fontSize: 14.0.sp,
                                           color: Colors.black87,
                                         ),
                                         textAlign: TextAlign.start,
@@ -287,7 +295,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                             : '',
                                         softWrap: true,
                                         style: new TextStyle(
-                                          fontSize: 13.0.sp,
+                                          fontSize: 14.0.sp,
                                           color: Colors.black87,
                                         ),
                                         textAlign: TextAlign.start,
@@ -347,6 +355,35 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     ListTile(
                                       title: Text('${cart.address.nickName}'),
                                       subtitle:Text('${cart.address.houseNumber} ${cart.address.streetName} ${cart.address.suburb} ${cart.address.city}  ${cart.address.province} ${cart.address.code}') ,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 10.sp,
+                                          bottom: 10.sp,
+                                          top: 20.sp),
+                                      child: new Text(
+                                        'Order Details',
+                                        softWrap: true,
+                                        style: new TextStyle(
+                                            fontSize: 16.0.sp,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10.sp),
+                                      child: new Text(
+                                        _user != null
+                                            ? "Order Type : " + cart.orderTypeMethod
+                                            : '',
+                                        softWrap: true,
+                                        style: new TextStyle(
+                                          fontSize: 14.0.sp,
+                                          color: Colors.black87,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(

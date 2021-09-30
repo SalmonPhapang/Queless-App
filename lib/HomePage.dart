@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/DetailsPage.dart';
 import 'package:flutter_app/OrderClientListPage.dart';
 import 'package:flutter_app/menu/ClientMenuPage.dart';
+import 'package:flutter_app/menu/CollectDeliverPage.dart';
 import 'package:flutter_app/menu/Menu.dart';
 import 'package:flutter_app/menu/OrderCart.dart';
 import 'package:flutter_app/model/Client.dart';
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> {
           icon: Image.asset('assets/images/take-away.png'),
           iconSize: 5.0.sp,
           onPressed: () {
-            Navigator.push(context,PageTransition(type: PageTransitionType.rightToLeft, child: ClientMenuPage(title: "Order From")),);
+            Navigator.push(context,PageTransition(type: PageTransitionType.rightToLeft, child: CollectDeliveryPage()),);
           },
         )
       ],
@@ -114,7 +115,13 @@ class _HomePageState extends State<HomePage> {
               },
             );
           }else if(snapshot.hasError){
-            return Text("${snapshot.error}");
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset("assets/images/cloud.png",width: 100.0.sp,),
+                Text("No Connection",style: TextStyle(fontSize: 13.0.sp),)
+              ],
+            );
           }else{
             return SpinKitCubeGrid(color: Color(0xffff5722));
           }

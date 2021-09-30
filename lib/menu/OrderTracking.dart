@@ -283,6 +283,20 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
                   leading: new Icon(Icons.track_changes_outlined),
                   title: new Text(widget.order.orderStatus),
                 ),
+                Visibility(
+                  visible: widget.order.collection,
+                  child: new ListTile(
+                    leading: new Icon(Icons.store),
+                    title: new Text("Collection"),
+                  ),
+                ),
+                Visibility(
+                  visible:widget.order.delivery ,
+                  child: new ListTile(
+                    leading: new Icon(Icons.delivery_dining),
+                    title: new Text("Delivery"),
+                  ),
+                ),
               ],
             ),
           );

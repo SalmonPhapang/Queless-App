@@ -14,10 +14,13 @@ class OrderCart with ChangeNotifier {
   String _clientKey;
   String get clientKey => _clientKey;
 
+  String _orderTypeMethod;
+  String get orderTypeMethod => _orderTypeMethod;
+
   double _subTotal;
   double get subTotal => _subTotal;
 
-  double _fee = 30.0;
+  double _fee;
   double get fee => _fee;
 
   double _total;
@@ -47,8 +50,16 @@ class OrderCart with ChangeNotifier {
     _address = address;
     notifyListeners();
   }
+  void setDeliveryFee(double fee){
+    _fee = fee;
+    notifyListeners();
+  }
   void setClientKey(String clientKey){
     _clientKey = clientKey;
+    notifyListeners();
+  }
+  void setOrderTypeMethod(String orderTypeMethod){
+    _orderTypeMethod = orderTypeMethod;
     notifyListeners();
   }
   void clear(OrderItem item) {

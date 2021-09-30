@@ -8,8 +8,8 @@ class NotificationService {
   var dio = Dio();
   final String path = dotenv.env['SERVER_URL'] + 'notification';
 
-  Future<String> send(NotificationDTO notification) async {
-    final response = await dio.post(path+'/send/',data: notification);
+  Future<String> send(Notification notification) async {
+    final response = await dio.post(path+'/send',data: notification);
     if(response.statusCode == HttpStatus.ok){
       return response.data;
     }

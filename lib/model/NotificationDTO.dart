@@ -1,11 +1,11 @@
-class NotificationDTO {
+class Notification {
    String userKey;
    String title;
    String message;
    String topic;
    String userType;
    bool isTopic;
-   NotificationDTO({this.userKey,this.title,this.message,this.isTopic,this.userType});
+   Notification({this.userKey,this.title,this.message,this.isTopic,this.userType});
    Map<String, dynamic> toJson() => {
      'userKey': userKey,
      'title': title,
