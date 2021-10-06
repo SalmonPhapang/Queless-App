@@ -14,6 +14,12 @@ class CollectDeliveryPage extends StatefulWidget {
 
 class _CollectDeliveryPageState extends State<CollectDeliveryPage> {
   @override
+  void didChangeDependencies() {
+    precacheImage(AssetImage("assets/images/scooter.jpg"), context);
+    precacheImage(AssetImage("assets/images/store.jpg"), context);
+    super.didChangeDependencies();
+  }
+  @override
   Widget build(BuildContext context) {
     var bloc = Provider.of<OrderCart>(context);
     final topAppBar = NewGradientAppBar(
@@ -37,7 +43,7 @@ class _CollectDeliveryPageState extends State<CollectDeliveryPage> {
                   elevation: 5.sp,
                   child: Column(
                     children: <Widget>[
-                      Image.asset("assets/images/scooter.jpg",width: 200.sp,fit: BoxFit.contain,),
+                        Image.asset("assets/images/scooter.jpg",width: 200.sp,fit: BoxFit.contain,),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text("Delivery",style: TextStyle(fontSize: 15.0.sp,fontWeight: FontWeight.bold)),
@@ -72,4 +78,5 @@ class _CollectDeliveryPageState extends State<CollectDeliveryPage> {
         ),
     );
   }
+
 }

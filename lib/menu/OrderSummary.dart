@@ -4,16 +4,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/auth/Authentication.dart';
 import 'package:flutter_app/menu/OrderTracking.dart';
+import 'package:flutter_app/model/Client.dart';
 import 'package:flutter_app/model/MenuItem.dart';
 import 'package:flutter_app/model/NotificationDTO.dart' as dto;
 import 'package:flutter_app/model/Order.dart';
 import 'package:flutter_app/model/OrderItem.dart';
 import 'package:flutter_app/model/User.dart';
 import 'package:flutter_app/service/AddressService.dart';
+import 'package:flutter_app/service/ClientService.dart';
 import 'package:flutter_app/service/NotificationService.dart';
 import 'package:flutter_app/service/OrderService.dart';
 import 'package:flutter_app/service/UserService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,8 +43,10 @@ class _OrderSummaryState extends State<OrderSummary> {
   UserService userService = new UserService();
   OrderService orderService = new OrderService();
   AddressService addressService = new AddressService();
+  ClientService clientService = new ClientService();
   NotificationService notificationService = new NotificationService();
   User _user;
+  Client _client;
   ProgressDialog progressDialog;
 
   List<Row> generateOrderTotals(OrderCart cart) {
@@ -147,7 +152,6 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   void initState() {
     super.initState();
-    getUser();
   }
 
   Future<User> getUser() async {
@@ -155,6 +159,7 @@ class _OrderSummaryState extends State<OrderSummary> {
     _user = await userService.fetchByKey(userKey);
     return _user;
   }
+
 
   saveNewOrder(OrderCart cart) async {
     progressDialog.show();
@@ -229,6 +234,12 @@ class _OrderSummaryState extends State<OrderSummary> {
             color: Colors.black,
             fontSize: 18.0.sp,
             fontWeight: FontWeight.w600));
+
+    getClient()async{
+      _client = await clientService.fetchByKey(cart.clientKey);
+      setState(() {});
+    }
+    getClient();
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: topAppBar,
@@ -244,195 +255,192 @@ class _OrderSummaryState extends State<OrderSummary> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                          margin:
-                          EdgeInsets.only(top: 15.0.sp, bottom: 15.sp),
                           width: MediaQuery.of(context).size.width,
-                          child: new Card(
+                          child: Card(
                             elevation: 10.0.sp,
-                            margin: EdgeInsets.all(3.0.sp),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 65.0.sp,
+                                      height: 65.0.sp,
+                                      margin: EdgeInsets.all(8.0.sp),
+                                      decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: new DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: CachedNetworkImageProvider(_client.profileUrl),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left:5.sp,bottom: 10.sp, top: 10.sp),
+                                      child: new Text(
+                                        _client != null
+                                            ? _client.name.trim()
+                                            : '',
+                                        softWrap: true,
+                                        style: new TextStyle(
+                                            fontSize: 16.0.sp,
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left:10.0.sp,top: 5.sp,bottom: 10.sp),
+                                  child: new Text(
+                                    _user != null
+                                        ? "Contact Number : " +
+                                        _client.cellNumber.trim()
+                                        : '',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black87,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            elevation: 10.0.sp,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(left:5.sp,bottom: 10.sp, top: 10.sp),
+                                  child: new Text(
+                                    'How we will contact you',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                        fontSize: 15.0.sp,
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10.sp),
+                                  child: new Text(
+                                    _user != null
+                                        ? "Name : " + _user.name.trim()
+                                        : '',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black87,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left:10.0.sp,top: 5.sp,bottom: 10.sp),
+                                  child: new Text(
+                                    _user != null
+                                        ? "Contact Number : " +
+                                        _user.cellNumber.trim()
+                                        : '',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black87,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            elevation: 10.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      left: 10.sp, bottom: 10.sp, top: 10.sp),
-                                  child: new Text(
-                                    'Contact Details',
-                                    softWrap: true,
-                                    style: new TextStyle(
-                                        fontSize: 16.0.sp,
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.start,
+                                      left: 10.sp,
+                                      top: 5.sp),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      new Text(
+                                        'Address Details',
+                                        softWrap: true,
+                                        style: new TextStyle(
+                                            fontSize: 15.0.sp,
+                                            color: Colors.grey[700],
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                      new InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: new Container(
+                                            height: 30.0.sp,
+                                            width: 80.sp,
+                                            margin: EdgeInsets.only(
+                                                top: 10.0.sp,
+                                                right: 10.0.sp),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5.0.sp)),
+                                                gradient: LinearGradient(
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.topRight,
+                                                    colors: TopWaveClipper
+                                                        .orangeGradients)),
+                                            child: Center(
+                                              child: new Text(
+                                                'Change',
+                                                softWrap: true,
+                                                style: new TextStyle(
+                                                  fontSize: 11.0.sp,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            )),
+                                      ),
+                                    ],
                                   ),
                                 ),
+                                ListTile(
+                                  title: Text('${cart.address.nickName}'),
+                                  subtitle:Text('${cart.address.houseNumber} ${cart.address.streetName} ${cart.address.suburb} ${cart.address.city}  ${cart.address.province} ${cart.address.code}') ,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: new Card(
+                            elevation: 10.0.sp,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
                                 new Column(
                                   crossAxisAlignment:
                                   CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.sp),
-                                      child: new Text(
-                                        _user != null
-                                            ? "Name : " + _user.name.trim()
-                                            : '',
-                                        softWrap: true,
-                                        style: new TextStyle(
-                                          fontSize: 14.0.sp,
-                                          color: Colors.black87,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.sp,
-                                          top: 5.sp),
-                                      child: new Text(
-                                        _user != null
-                                            ? "Contact Number : " +
-                                            _user.cellNumber.trim()
-                                            : '',
-                                        softWrap: true,
-                                        style: new TextStyle(
-                                          fontSize: 14.0.sp,
-                                          color: Colors.black87,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.sp,
-                                          top: 5.sp),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          new Text(
-                                            'Address Details',
-                                            softWrap: true,
-                                            style: new TextStyle(
-                                                fontSize: 16.0.sp,
-                                                color: Colors.black87,
-                                                fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                          new InkWell(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: new Container(
-                                                height: 30.0.sp,
-                                                width: 80.sp,
-                                                margin: EdgeInsets.only(
-                                                    top: 10.0.sp,
-                                                    right: 10.0.sp),
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.all(
-                                                        Radius.circular(5.0.sp)),
-                                                    gradient: LinearGradient(
-                                                        begin: Alignment.topLeft,
-                                                        end: Alignment.topRight,
-                                                        colors: TopWaveClipper
-                                                            .orangeGradients)),
-                                                child: Center(
-                                                  child: new Text(
-                                                    'Change',
-                                                    softWrap: true,
-                                                    style: new TextStyle(
-                                                      fontSize: 11.0.sp,
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    ListTile(
-                                      title: Text('${cart.address.nickName}'),
-                                      subtitle:Text('${cart.address.houseNumber} ${cart.address.streetName} ${cart.address.suburb} ${cart.address.city}  ${cart.address.province} ${cart.address.code}') ,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.sp,
-                                          bottom: 10.sp,
-                                          top: 20.sp),
-                                      child: new Text(
-                                        'Order Details',
-                                        softWrap: true,
-                                        style: new TextStyle(
-                                            fontSize: 16.0.sp,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10.sp),
-                                      child: new Text(
-                                        _user != null
-                                            ? "Order Type : " + cart.orderTypeMethod
-                                            : '',
-                                        softWrap: true,
-                                        style: new TextStyle(
-                                          fontSize: 14.0.sp,
-                                          color: Colors.black87,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          left: 10.sp,
-                                          bottom: 10.sp,
-                                          top: 20.sp),
-                                      child: new Text(
-                                        'Available Payment Options',
-                                        softWrap: true,
-                                        style: new TextStyle(
-                                            fontSize: 16.0.sp,
-                                            color: Colors.black87,
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    Center(
-                                      child: ToggleSwitch(
-                                        totalSwitches: 2,
-                                        minHeight: 35.sp,
-                                        minWidth: 150.sp,
-                                        cornerRadius: 5.0.sp,
-                                        activeBgColor: [Colors.blue],
-                                        activeFgColor: Colors.white,
-                                        inactiveBgColor: Colors.blue,
-                                        inactiveFgColor: Colors.white,
-                                        labels: ['Cash', 'Speed Point'],
-                                        iconSize: 12.sp,
-                                        icons: [
-                                          FontAwesomeIcons.moneyBillWave,
-                                          FontAwesomeIcons.creditCard,
-                                        ],
-                                        onToggle: (index) {
-                                          print("index" + index.toString());
-                                          switch (index) {
-                                            case 0:
-                                              setState(() {
-                                                paymentMethod = 'Cash';
-                                              });
-                                              break;
-                                            case 1:
-                                              setState(() {
-                                                paymentMethod = 'Speed Point';
-                                              });
-                                              break;
-                                          }
-                                        },
-                                      ),
-                                    ),
                                     Padding(
                                       padding: EdgeInsets.only(
                                           left: 10.sp,
@@ -441,8 +449,8 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         'Item(s)',
                                         softWrap: true,
                                         style: new TextStyle(
-                                            fontSize: 16.0.sp,
-                                            color: Colors.black87,
+                                            fontSize: 15.0.sp,
+                                            color: Colors.grey[700],
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.start,
                                       ),
@@ -463,80 +471,100 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     )
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    new InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: new Container(
-                                          height: 50.0.sp,
-                                          width: 150.sp,
-                                          margin: EdgeInsets.only(
-                                              top: 10.0.sp,
-                                              left: 10.0.sp,
-                                              bottom: 10.0.sp),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0.sp)),
-                                              gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.topRight,
-                                                  colors: TopWaveClipper
-                                                      .orangeGradients)),
-                                          child: Center(
-                                            child: new Text(
-                                              'Edit',
-                                              softWrap: true,
-                                              style: new TextStyle(
-                                                fontSize: 15.0.sp,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.start,
-                                            ),
-                                          )),
-                                    ),
-                                    new InkWell(
-                                      onTap: () {
-                                        saveNewOrder(cart);
-                                      },
-                                      child: new Container(
-                                          height: 50.0.sp,
-                                          width: 150.sp,
-                                          margin: EdgeInsets.only(
-                                              top: 10.0.sp,
-                                              right: 10.0.sp,
-                                              bottom: 10.0.sp),
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(5.0.sp)),
-                                              gradient: LinearGradient(
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.topRight,
-                                                  colors: TopWaveClipper
-                                                      .blueGradients)),
-                                          child: Center(
-                                            child: new Text(
-                                              'Complete',
-                                              softWrap: true,
-                                              style: new TextStyle(
-                                                fontSize: 15.0.sp,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.start,
-                                            ),
-                                          )),
-                                    ),
-                                  ],
-                                )
                               ],
                             ),
                           ),
                         ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 10.sp,
+                                      bottom: 10.sp,
+                                      top: 20.sp),
+                                  child: new Text(
+                                    'Available Payment Options',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                        fontSize: 15.0.sp,
+                                        color: Colors.grey[700],
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 10.0),
+                                  child: Center(
+                                    child: ToggleSwitch(
+                                      totalSwitches: 2,
+                                      minHeight: 35.sp,
+                                      minWidth: 150.sp,
+                                      cornerRadius: 5.0.sp,
+                                      activeBgColor: [Colors.blue],
+                                      activeFgColor: Colors.white,
+                                      inactiveBgColor: Colors.blue,
+                                      inactiveFgColor: Colors.white,
+                                      labels: ['Cash', 'Speed Point'],
+                                      iconSize: 12.sp,
+                                      icons: [
+                                        FontAwesomeIcons.moneyBillWave,
+                                        FontAwesomeIcons.creditCard,
+                                      ],
+                                      onToggle: (index) {
+                                        print("index" + index.toString());
+                                        switch (index) {
+                                          case 0:
+                                            setState(() {
+                                              paymentMethod = 'Cash';
+                                            });
+                                            break;
+                                          case 1:
+                                            setState(() {
+                                              paymentMethod = 'Speed Point';
+                                            });
+                                            break;
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        new InkWell(
+                            onTap: () {
+                              saveNewOrder(cart);
+                            },
+                            child: new Container(
+                                height: 50.0.sp,
+                                width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.all(10.0.sp),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(5.0.sp)),
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.topRight,
+                                        colors: TopWaveClipper
+                                            .orangeGradients)),
+                                child: Center(
+                                  child: new Text(
+                                    'Check out',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                      fontSize: 15.0.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                )),
+                          ),
                       ],
                     ),
                   );
@@ -565,8 +593,8 @@ class _OrderSummaryState extends State<OrderSummary> {
 
   List<DataRow> generateData(OrderCart bloc) {
     List<OrderItem> items = bloc.cart;
-    List<DataCell> cells = new List<DataCell>();
-    List<DataRow> rows = new List<DataRow>();
+    List<DataCell> cells = [];
+    List<DataRow> rows = [];
     for (var item in items) {
       DataCell imageCell = DataCell(new Image(
         height: 50.0.sp,
@@ -574,13 +602,16 @@ class _OrderSummaryState extends State<OrderSummary> {
         image: CachedNetworkImageProvider(item.menuItem.image),
       ));
       DataCell nameCell = DataCell(generateTiles(item.menuItem));
-      DataCell priceCell = DataCell(Text('R' + item.menuItem.price.toString()));
+      DataCell priceCell = DataCell(Padding(
+        padding: EdgeInsets.only(left: 12.0.sp),
+        child: Text('R' + item.menuItem.price.toString()),
+      ));
 
       cells.add(imageCell);
       cells.add(nameCell);
       cells.add(priceCell);
 
-      List<DataCell> cells1 = new List<DataCell>();
+      List<DataCell> cells1 = [];
       cells1.addAll(cells);
       rows.add(DataRow(cells: cells1));
       cells.clear();
