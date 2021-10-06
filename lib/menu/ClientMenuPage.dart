@@ -10,7 +10,9 @@ import 'package:flutter_app/service/AddressService.dart';
 import 'package:flutter_app/service/ClientService.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
@@ -30,6 +32,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
   AddressService addressService = new AddressService();
   Auth auth = new Auth();
   List<Client> clients = [];
+  List<Client> clientsToFilter = [];
   Position _position;
 
  void getLocation() async {
@@ -46,11 +49,12 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
        client.address =  await addressService.fetchByClientKey(client.key);
        calculateDistance(client);
      }
+     clientsToFilter.addAll(clients);
      setState(() {});
   }
   int calculateDeliveryFee(int distance){
     if(distance <= 5){
-      return 10;
+      return 15;
     }else if(distance > 5 && distance <= 10){
       return 20;
     }else{
@@ -70,6 +74,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
     super.initState();
     getLocation();
   }
+  FloatingSearchBarController _floatingSearchBarController = FloatingSearchBarController();
   @override
   Widget build(BuildContext context) {
     var bloc = Provider.of<OrderCart>(context);
@@ -112,219 +117,290 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
     return Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: topAppBar,
-        body:  Container(
-            child: clients.length != 0 ?
-                     ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: clients.length,
-                          itemBuilder: (context, index) {
-                            return Stack(
-                              children: <Widget>[
-                            new Card(
+        body:  Stack(
+            children:<Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 55.0.sp),
+                child: clients.length != 0 ?
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: clients.length,
+                    itemBuilder: (context, index) {
+                      return Stack(
+                        children: <Widget>[
+                          new Card(
                             elevation: 5.0.sp,
-                              shadowColor: Colors.grey[100],
-                              child: new Container(
-                                child: new Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Stack(
-                                alignment: Alignment.center,
-                                      children: <Widget>[
-                                        InkWell(
-                                          onTap: () {
-                                            bloc.setDeliveryFee(calculateDeliveryFee(clients[index].distance.round()).toDouble());
-                                            Navigator.push(
-                                              context,
-                                              PageTransition(type: PageTransitionType.rightToLeft, child:
-                                              MenuPage(
-                                                title: "Menu",
-                                                clientKey:
-                                                clients[index].key,
-                                              )),
-                                            );
-                                          },
-                                          child: new Image(
-                                            height: 200.sp,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            fit: BoxFit.cover,
-                                            image: CachedNetworkImageProvider(
-                                                clients[index].coverImage),
+                            shadowColor: Colors.grey[100],
+                            child: new Container(
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: <Widget>[
+                                      InkWell(
+                                        onTap: () {
+                                          bloc.setDeliveryFee(calculateDeliveryFee(clients[index].distance.round()).toDouble());
+                                          Navigator.push(
+                                            context,
+                                            PageTransition(type: PageTransitionType.rightToLeft, child:
+                                            MenuPage(
+                                              title: "Menu",
+                                              clientKey:
+                                              clients[index].key,
+                                            )),
+                                          );
+                                        },
+                                        child: new Image(
+                                          height: 200.sp,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          fit: BoxFit.cover,
+                                          image: CachedNetworkImageProvider(
+                                              clients[index].coverImage),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: !clients[index].online,
+                                        child: Container(
+                                          height: 200.sp,
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width,
+                                          color: Colors.black.withOpacity(0.5.sp),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.cloud_off,
+                                                color: Colors.white,
+                                                size: 30.sp,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.only(left: 10.0.sp),
+                                                child: Text(
+                                                  'OFFLINE',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 16.sp),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
-                                        Visibility(
-                                          visible: !clients[index].online,
-                                            child: Container(
-                                              height: 200.sp,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              color: Colors.black.withOpacity(0.5.sp),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.cloud_off,
-                                                    color: Colors.white,
-                                                    size: 30.sp,
+                                      ),
+                                    ],
+                                  ),
+                                  new Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: 60.0.sp,
+                                        height: 60.0.sp,
+                                        margin: EdgeInsets.all(5.0.sp),
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image:
+                                            CachedNetworkImageProvider(
+                                                clients[index]
+                                                    .profileUrl),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.only(left: 5.0),
+                                        constraints: new BoxConstraints(
+                                            maxWidth: 150.sp),
+                                        child: new Text(
+                                          clients[index].name,
+                                          style: new TextStyle(
+                                              fontSize: 15.0.sp,
+                                              color: Colors.black87,
+                                              fontWeight:
+                                              FontWeight.bold),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                      new Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(right:5.sp),
+                                        child: Wrap(
+                                            spacing: 10.sp,
+                                            children: <Widget>[
+                                              Column(
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: 35.sp,
+                                                    height: 35.sp,
+                                                    child:  CircleAvatar(
+                                                      backgroundColor: Colors.orange,
+                                                      radius: 30,
+                                                      child: Icon(
+                                                        Icons.accessibility,
+                                                        color: Colors.white,
+                                                        size: 20.sp,),
+                                                    ),
                                                   ),
                                                   Padding(
-                                                    padding: EdgeInsets.only(left: 10.0.sp),
-                                                    child: Text(
-                                                      'OFFLINE',
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 16.sp),
-                                                    ),
-                                                  )
+                                                    padding: EdgeInsets.only(top: 5.0),
+                                                    child: new Container(
+                                                        child: new Text(
+                                                          "Collection",
+                                                          style: new TextStyle(
+                                                              fontSize: 8.0.sp,
+                                                              color: Colors.black87,
+                                                              fontWeight:
+                                                              FontWeight.bold),
+                                                          textAlign: TextAlign.start,
+                                                        )),
+                                                  ),
                                                 ],
                                               ),
-                                            ),
-                                        ),
-                                      ],
-                                    ),
-                                    new Row(
-                                      children: <Widget>[
-                                        Container(
-                                          width: 60.0.sp,
-                                          height: 60.0.sp,
-                                          margin: EdgeInsets.all(5.0.sp),
-                                          decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: new DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image:
-                                              CachedNetworkImageProvider(
-                                                  clients[index]
-                                                      .profileUrl),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.only(left: 5.0),
-                                          constraints: new BoxConstraints(
-                                              maxWidth: 150.sp),
-                                          child: new Text(
-                                            clients[index].name,
-                                            style: new TextStyle(
-                                                fontSize: 15.0.sp,
-                                                color: Colors.black87,
-                                                fontWeight:
-                                                FontWeight.bold),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                        new Spacer(),
-                                        Padding(
-                                          padding: EdgeInsets.only(right:5.sp),
-                                          child: Wrap(
-                                              spacing: 10.sp,
-                                              children: <Widget>[
-                                                Column(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: 35.sp,
-                                                      height: 35.sp,
-                                                      child:  CircleAvatar(
-                                                        backgroundColor: Colors.orange,
-                                                        radius: 30,
-                                                        child: Icon(
-                                                          Icons.accessibility,
-                                                          color: Colors.white,
-                                                          size: 20.sp,),
-                                                      ),
+                                              Column(
+                                                children: <Widget>[
+                                                  Container(
+                                                    width: 35.sp,
+                                                    height: 35.sp,
+                                                    child:  CircleAvatar(
+                                                      backgroundColor: Colors.blue,
+                                                      radius: 30,
+                                                      child: Icon(
+                                                        Icons.delivery_dining,
+                                                        color: Colors.white,
+                                                        size: 20.sp,),
                                                     ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(top: 5.0),
-                                                      child: new Container(
-                                                          child: new Text(
-                                                            "Collection",
-                                                            style: new TextStyle(
-                                                                fontSize: 8.0.sp,
-                                                                color: Colors.black87,
-                                                                fontWeight:
-                                                                FontWeight.bold),
-                                                            textAlign: TextAlign.start,
-                                                          )),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Column(
-                                                  children: <Widget>[
-                                                    Container(
-                                                      width: 35.sp,
-                                                      height: 35.sp,
-                                                      child:  CircleAvatar(
-                                                        backgroundColor: Colors.blue,
-                                                        radius: 30,
-                                                        child: Icon(
-                                                          Icons.delivery_dining,
-                                                          color: Colors.white,
-                                                          size: 20.sp,),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(top: 5.0),
-                                                      child: new Container(
-                                                          child: new Text(
-                                                            "Delivery",
-                                                            style: new TextStyle(
-                                                                fontSize: 8.0.sp,
-                                                                color: Colors.black87,
-                                                                fontWeight:
-                                                                FontWeight.bold),
-                                                            textAlign: TextAlign.start,
-                                                          )),
-                                                    ),
-                                                  ],
-                                                )
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(top: 5.0),
+                                                    child: new Container(
+                                                        child: new Text(
+                                                          "Delivery",
+                                                          style: new TextStyle(
+                                                              fontSize: 8.0.sp,
+                                                              color: Colors.black87,
+                                                              fontWeight:
+                                                              FontWeight.bold),
+                                                          textAlign: TextAlign.start,
+                                                        )),
+                                                  ),
+                                                ],
+                                              )
 
-                                              ]),
+                                            ]),
+                                      ),
+                                    ],
+                                  ), //Row
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 18.0.sp,bottom: 10.0.sp),
+                                        child: Text(
+                                          clients[index].distance.round().toString()+" Km",
+                                          style: new TextStyle(
+                                              fontSize: 10.0.sp,
+                                              color: Colors.grey[700],
+                                              fontWeight:
+                                              FontWeight.bold),
+                                          textAlign: TextAlign.start,
                                         ),
-                                      ],
-                                    ), //Row
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 18.0.sp,bottom: 10.0.sp),
-                                          child: Text(
-                                            clients[index].distance.round().toString()+" Km",
-                                            style: new TextStyle(
-                                                fontSize: 10.0.sp,
-                                                color: Colors.grey[700],
-                                                fontWeight:
-                                                FontWeight.bold),
-                                            textAlign: TextAlign.start,
-                                          ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 10.0.sp,bottom: 10.0.sp),
+                                        child: Text(
+                                          "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString(),
+                                          style: new TextStyle(
+                                              fontSize: 10.0.sp,
+                                              color: Colors.grey[700],
+                                              fontWeight:
+                                              FontWeight.bold),
+                                          textAlign: TextAlign.start,
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 10.0.sp,bottom: 10.0.sp),
-                                          child: Text(
-                                            "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString(),
-                                            style: new TextStyle(
-                                                fontSize: 10.0.sp,
-                                                color: Colors.grey[700],
-                                                fontWeight:
-                                                FontWeight.bold),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ], //[Widget]
-                                ), //Column
-                              ), //Container
-                            ), //Cards ,
-                              ],
-                            );
-                          }) :
-                     Center(
-                         child:SpinKitCubeGrid(color: Color(0xffff5722)))
+                                      )
+                                    ],
+                                  )
+                                ], //[Widget]
+                              ), //Column
+                            ), //Container
+                          ), //Cards ,
+                        ],
+                      );
+                    }) :
+                Center(
+                    child:SpinKitCubeGrid(color: Color(0xffff5722))),
+              ),
+              buildFloatingSearchBar(),
+            ]
                 ));
+  }
+
+  Widget buildFloatingSearchBar() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return FloatingSearchBar(
+      controller: _floatingSearchBarController,
+      hint: 'Search Restaurants...',
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+      transitionDuration: const Duration(milliseconds: 800),
+      transitionCurve: Curves.easeInOut,
+      physics: const BouncingScrollPhysics(),
+      axisAlignment: isPortrait ? 0.0 : -1.0,
+      openAxisAlignment: 0.0,
+      width: isPortrait ? 600 : 500,
+      automaticallyImplyBackButton: false,
+      debounceDelay: const Duration(milliseconds: 500),
+      onQueryChanged: (query) {
+        this.clientsToFilter = clientsToFilter.where((element) => element.name.toLowerCase().startsWith(query)).toList();
+        if(this.clientsToFilter.isEmpty || query.isEmpty){
+          this.clientsToFilter.addAll(this.clients);
+        }
+        setState(() {});
+      },
+      // Specify a custom transition to be used for
+      // animating between opened and closed stated.
+      transition: CircularFloatingSearchBarTransition(),
+      actions: [
+        FloatingSearchBarAction.searchToClear(
+          showIfClosed: false,
+        ),
+      ],
+      builder: (context, transition) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Material(
+            color: Colors.white,
+            elevation: 4.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: clientsToFilter.map((client) {
+                return ListTile(
+                  title: Text(client.name),
+                  subtitle: Text(client.distance.floor().toString()+" km"),
+                  onTap: (){
+                    filterClients(client);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+    filterClients(Client client){
+      clients.clear();
+      clients.add(client);
+      _floatingSearchBarController.close();
+      setState(() {});
+    }
+  @override
+  void dispose() {
+    _floatingSearchBarController.dispose();
+    super.dispose();
   }
 }
