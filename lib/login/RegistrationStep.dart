@@ -1,4 +1,3 @@
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/adddress/AddressSearchPage.dart';
@@ -8,19 +7,22 @@ import 'package:flutter_app/model/Credentials.dart';
 import 'package:flutter_app/model/User.dart';
 import 'package:flutter_app/service/AuthenticationService.dart';
 import 'package:flutter_app/service/UserService.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_pw_validator/flutter_pw_validator.dart';
+
+import 'OTPVerification.dart';
+
 class RegistrationStepPage extends StatefulWidget {
   RegistrationStepPage({Key key, this.title}) : super(key: key);
 
   final String title;
+
   @override
   _RegistrationStepPageState createState() => _RegistrationStepPageState();
 }
@@ -31,13 +33,13 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
   Auth auth = new Auth();
   UserService userService = new UserService();
   AuthenticationService authenticationService = new AuthenticationService();
-  final GlobalKey<FormState> _infoKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _accountKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  bool _terms = false;
   String _name;
   String _email;
   String _mobile;
   String _lastName;
-  String _dateOfBirth;
   String _password;
   String _confirmPassword;
   TextEditingController password = TextEditingController();
@@ -45,30 +47,13 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
   DateTime currentDate = DateTime.now();
   DateTime pickedDate = DateTime.now();
   TextEditingController _dateController = TextEditingController();
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime pickedDate = await showDatePicker(
-        context: context,
-        initialDate: currentDate,
-        firstDate: DateTime(1920),
-        lastDate: DateTime(2050));
-    if (pickedDate != null && pickedDate != currentDate){
-      if(currentDate.year - pickedDate.year >= 18){
-        setState(() {
-          this.pickedDate = pickedDate;
-          _dateController.text = DateFormat.yMd().format(this.pickedDate);
-          _dateOfBirth = _dateController.text;
-        });
-      }else{
-        Fluttertoast.showToast(msg: "You have to be 18 years or older to use the app",toastLength: Toast.LENGTH_LONG);
-      }
-    }
 
-  }
   @override
   void initState() {
     _dateController.text = DateFormat.yMd().format(currentDate);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     String validateName(String value) {
@@ -77,40 +62,46 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       else
         return null;
     }
+
     String validateLastName(String value) {
       if (value.length < 3)
         return 'Last Name must be more than 2 charater';
       else
         return null;
     }
+
     String validateMobile(String value) {
       if (value.length != 10)
         return 'Mobile Number must be of 10 digit';
       else
         return null;
     }
+
     String validateDateOfBirth(String value) {
-      if(currentDate.year - pickedDate.year < 18)
+      if (currentDate.year - pickedDate.year < 18)
         return 'You have to be 18 years or older to use the app';
       else
         return null;
     }
 
-    String validatePassword(String value){
-      String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    String validatePassword(String value) {
+      String pattern =
+          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
       RegExp regExp = new RegExp(pattern);
       if (!regExp.hasMatch(value))
         return 'Password too weak';
       else
         return null;
     }
-    String validateConfirmPassword(String value){
+
+    String validateConfirmPassword(String value) {
       if (password.text != confirmpassword.text) {
         return "Password does not match";
-      }else{
+      } else {
         return null;
       }
     }
+
     String validateEmail(String value) {
       Pattern pattern =
           r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -120,6 +111,7 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       else
         return null;
     }
+
     final nameField = TextFormField(
       obscureText: false,
       style: style,
@@ -131,8 +123,9 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       },
       decoration: InputDecoration(
           labelText: "First Name",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );//nameField
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); //nameField
     final lastNameField = TextFormField(
       obscureText: false,
       style: style,
@@ -144,22 +137,9 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       },
       decoration: InputDecoration(
           labelText: "Last Name",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );//nameField
-    final dateOfBirthField = TextFormField(
-      obscureText: false,
-      style: style,
-      controller: _dateController,
-      textInputAction: TextInputAction.next,
-      validator: validateDateOfBirth,
-      onTap: ()=>_selectDate(context),
-      onSaved: (String value) {
-        _dateOfBirth = value;
-      },
-      decoration: InputDecoration(
-          labelText: "Date Of Birth",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );//dateField
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); //nameField
     final cellField = TextFormField(
       obscureText: false,
       style: style,
@@ -171,8 +151,9 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       },
       decoration: InputDecoration(
           labelText: "Mobile Number",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );//nameField
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); //nameField
     final emailField = TextFormField(
       obscureText: false,
       style: style,
@@ -184,60 +165,76 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
       },
       decoration: InputDecoration(
           labelText: "Email",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );//emailField
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); //emailField
     final passwordField = TextFormField(
       obscureText: true,
       controller: password,
       style: style,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
-      validator: validatePassword ,
+      validator: validatePassword,
       onSaved: (String value) {
         _password = value;
       },
       decoration: InputDecoration(
           labelText: "Password",
           border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );// passwordField
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); // passwordField
     final confirmPasswordField = TextFormField(
       obscureText: true,
       controller: confirmpassword,
       style: style,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.done,
-      validator: validateConfirmPassword ,
+      validator: validateConfirmPassword,
       onSaved: (String value) {
         _password = value;
       },
       decoration: InputDecoration(
           labelText: "Confirm Password",
           border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
-    );// passwordField
-    ProgressDialog progressDialog = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
+              OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
+    ); // passwordField
+    ProgressDialog progressDialog = new ProgressDialog(context,
+        type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
     progressDialog.style(
         message: 'Signing Up...',
         borderRadius: 10.0.sp,
         backgroundColor: Colors.white,
-        progressWidget: SpinKitCubeGrid(color: Color(0xffff5722),size: 25.0.sp,),
+        progressWidget: SpinKitCubeGrid(
+          color: Color(0xffff5722),
+          size: 25.0.sp,
+        ),
         elevation: 10.0.sp,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
         maxProgress: 100.0.sp,
         progressTextStyle: TextStyle(
-            color: Colors.black, fontSize: 11.0.sp, fontWeight: FontWeight.w400),
+            color: Colors.black,
+            fontSize: 11.0.sp,
+            fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 18.0.sp, fontWeight: FontWeight.w600)
-    );
-    Future<void> _handleSignUp() async{
+            color: Colors.black,
+            fontSize: 18.0.sp,
+            fontWeight: FontWeight.w600));
+    Future<void> _handleSignUp() async {
       progressDialog.show();
       String token = await FirebaseMessaging.instance.getToken();
-      User user = new User.from(name: _name,lastName: _lastName,email: _email,cellNumber: _mobile,status: true,emailVerified: false,fcmToken: token,mobileApp: true);
-      String key  = await userService.save(user);
-      if(key != null && key.isNotEmpty){
-        Credentials credentials = Credentials(userName: user.email,password: _password,userKey: key);
+      User user = new User.from(
+          name: _name,
+          email: _email,
+          cellNumber: _mobile,
+          status: true,
+          emailVerified: false,
+          fcmToken: token,
+          mobileApp: true);
+      String key = await userService.save(user);
+      if (key != null && key.isNotEmpty) {
+        Credentials credentials = Credentials(
+            userName: user.email, password: _password, userKey: key);
         await authenticationService.save(credentials);
 
         final prefs = await SharedPreferences.getInstance();
@@ -245,148 +242,153 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
         FirebaseMessaging.instance.subscribeToTopic(Topics.PROMOTIONS);
         FirebaseMessaging.instance.subscribeToTopic(Topics.MARKETING);
         progressDialog.hide();
-        Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: AddressSearchPage(title: "Find Address",user: user,)),);
-      }else{
+        Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: AddressSearchPage(
+                title: "Find Address",
+                user: user,
+              )),
+        );
+      } else {
         progressDialog.hide();
-        Fluttertoast.showToast(msg: "UserName with email already exists",toastLength: Toast.LENGTH_LONG);
+        Fluttertoast.showToast(
+            msg: "UserName with email already exists",
+            toastLength: Toast.LENGTH_LONG);
       }
     }
-    void _validateAccountForm() {
-      if (_accountKey.currentState.validate()) {
+    Future<void> _sendOTP() async {
+      String token = await FirebaseMessaging.instance.getToken();
+      User user = new User.from(
+          name: _name,
+          email: _email,
+          cellNumber: _mobile,
+          status: true,
+          emailVerified: false,
+          fcmToken: token,
+          mobileApp: true);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => OTPVerification(title: "Verification",user: user,)),);
+    }
+    void _validateForm() {
+      if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
-        _accountKey.currentState.save();
-        _handleSignUp();
+        _formKey.currentState.save();
+        _sendOTP();
+      } else {
+//    If all data are not valid then start auto validation.
+        setState(() {
+          _autoValidate = true;
+        });
       }
     }
-    bool _validateInfoForm() {
-      if (_infoKey.currentState.validate()) {
-//    If all data are correct then save data to out variables
-        _infoKey.currentState.save();
-        return true;
-      }else{
-        return false;
+    void toggleSwitch(bool value) {
+      if(_terms == false) {
+        setState(() {
+          _terms = true;
+        });
       }
-    }
-    tapped(int step){
-      setState(() => _currentStep = step);
-    }
-
-    continued(){
-      if(_currentStep == 0){
-        if(_validateInfoForm()){
-          _currentStep < 2 ?
-          setState(() => _currentStep += 1): null;
-        }
-      }else if(_currentStep >= 1){
-        _validateAccountForm();
+      else{
+        setState(() {
+          _terms = false;
+        });
       }
-    }
-    cancel(){
-      _currentStep > 0 ?
-      setState(() => _currentStep -= 1) : null;
     }
     final topAppBar = NewGradientAppBar(
       elevation: 0.1.sp,
-      gradient: LinearGradient(colors: [Colors.cyan,Colors.indigo]),
+      gradient: LinearGradient(colors: [Colors.cyan, Colors.indigo]),
       title: Text(widget.title),
     );
-    return  Scaffold(
-      appBar: topAppBar,
-      body: Column(
-        children: <Widget>[
-          Expanded( child: Theme(
-            data: ThemeData(
-                colorScheme: ColorScheme.light(
-                    primary: Colors.blue
-                )
+    return Scaffold(
+      backgroundColor: Colors.white,
+        appBar: topAppBar,
+        body:SingleChildScrollView(
+          child:Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 30.0.sp),
+              child: new Text(
+                'Join us for no more queues',
+                style: new TextStyle(
+                  fontSize: 17.0.sp,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            child: Stepper(
-              type: StepperType.vertical,
-              physics: ScrollPhysics(),
-              currentStep: _currentStep,
-              onStepTapped: (step)=> tapped(step),
-              onStepContinue:  continued,
-              onStepCancel: cancel,
-              steps: <Step>[
-                Step(
-                  title: const Text('Personal Info'),
-                  content: new Form(
-                          key: _infoKey,
-                          autovalidateMode: AutovalidateMode.disabled,
-                          child:  Column(
-                            children: <Widget>[
-                              Padding(
-                                padding:  EdgeInsets.only(top: 10.0.sp),
-                                child: nameField,
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: 10.0.sp),
-                                child:lastNameField,
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: 10.0.sp),
-                                child: cellField,
-                              ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: 10.0.sp),
-                                child: dateOfBirthField,
-                              )
-                            ],
-                          ),
+            Padding(
+              padding: EdgeInsets.only(top: 10.0.sp),
+              child: new Text(
+                'Discover the perfect events',
+                style: new TextStyle(
+                  fontSize: 12.0.sp,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 40.0.sp,left: 10.0.sp,right: 10.0.sp),
+                    child: nameField,
                   ),
-                  isActive: _currentStep >= 0,
-                  state: _currentStep >= 0 ?
-                  StepState.complete : StepState.disabled,
-                ),
-                Step(
-                  title: new Text('Account'),
-                  content: new Form(
-                        key: _accountKey,
-                        autovalidateMode: AutovalidateMode.disabled,
-                  child:Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10.0.sp),
-                        child: emailField,
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.0.sp,left: 10.0.sp,right: 10.0.sp),
+                    child: emailField,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7.0.sp,left: 10.0.sp,right: 10.0.sp),
+                    child: cellField,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'I agree with the Terms of Service & Privacy Policy',
+                      style: new TextStyle(
+                        fontSize: 11.0.sp,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Padding(
-                        padding:  EdgeInsets.only(top: 10.0.sp),
-                        child: passwordField,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 2.0.sp),
-                        child: new FlutterPwValidator(
-                            controller: password,
-                            minLength: 8,
-                            uppercaseCharCount: 1,
-                            numericCharCount: 1,
-                            specialCharCount: 1,
-                            width: 400.sp,
-                            height: 130.sp,
-                            onSuccess: ()=>{
-
-                            }
-                        ),
-                      ),
-                      Padding(
-                        padding:  EdgeInsets.only(top: 10.0.sp),
-                        child: confirmPasswordField,
-                      ),
-                    ],
-                  )),
-                  isActive: _currentStep >= 0,
-                  state: _currentStep >= 1 ?
-                  StepState.complete : StepState.disabled,
-                ),
-              ],
+                    ),
+                    leading: Switch(
+                      onChanged: toggleSwitch,
+                      value: _terms,
+                      activeColor: Colors.orange,
+                      activeTrackColor: Colors.orange[100],
+                    )  ,
+                  ),
+                ],
+              ),
             ),
-          ))
-        ],
-      )
-    );
-
+            Container(
+              width: MediaQuery.of(context).size.width.sp,
+              margin: EdgeInsets.only(top:15.0.sp,left: 5.0.sp,right: 5.0.sp),
+              height: 50.0.sp,
+              child:  FlatButton(
+                onPressed: _terms ? (){
+                  _validateForm();
+                }: null,
+                child: new Text(
+                  "Join",
+                  style: new TextStyle(
+                      fontSize: 17.0.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                color: Colors.blue,
+                disabledColor: Colors.grey[300],
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(10.0.sp),
+                    side: BorderSide(color: Colors.blue)
+                ),
+              ),
+            ),
+          ],
+        )));
   }
-
-
 }

@@ -19,6 +19,7 @@
             android:value="AIzaSyD7bBc0mwjX_y9H76B0rCTqolY36AseFas"/>
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:launchMode="singleTop"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"

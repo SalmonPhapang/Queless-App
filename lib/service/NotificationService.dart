@@ -15,4 +15,11 @@ class NotificationService {
     }
     return "";
   }
+  Future<bool> sendOTP(String number,String otp) async {
+    final response = await dio.post(path+'/send/otp/$number/$otp');
+    if(response.statusCode == HttpStatus.ok){
+      return response.data;
+    }
+    return false;
+  }
 }

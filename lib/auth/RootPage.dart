@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/HomePage.dart';
 import 'package:flutter_app/auth/Authentication.dart';
 import 'package:flutter_app/intro/introPage.dart';
-import 'package:flutter_app/login/RegistrationPage.dart';
+import 'package:flutter_app/login/FinishRegistrationPage.dart';
 import 'package:flutter_app/login/loginPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/menu/OrderTracking.dart';

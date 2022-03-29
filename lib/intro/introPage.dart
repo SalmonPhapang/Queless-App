@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/login/RegistrationPage.dart';
+import 'package:flutter_app/login/FinishRegistrationPage.dart';
 import 'package:flutter_app/login/RegistrationStep.dart';
 import 'package:flutter_app/login/loginPage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -59,7 +59,7 @@ class _IntroPageState extends State<IntroPage> {
                 child: new Text(
                   "Login",
                   style: new TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       color: Colors.blue,
                       fontWeight: FontWeight.bold
                   ),
@@ -71,12 +71,12 @@ class _IntroPageState extends State<IntroPage> {
               padding: EdgeInsets.only(right: 10.0.sp),
               child: TextButton(
                 onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationStepPage(title: "Set up account")),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationStepPage(title: "New Account")),);
                 },
                 child: new Text(
                   "Register",
                   style: new TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: 16.sp,
                       color: Colors.blue,
                       fontWeight: FontWeight.bold
                   ),

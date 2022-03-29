@@ -16,6 +16,7 @@ import 'package:flutter_app/utils/BottomWaveClipper.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splash_screen_view/SplashScreenView.dart';
@@ -26,7 +27,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
-    'This channel is used for important notifications.', // description
+    description: 'This channel is used for important notifications.', // description
     importance: Importance.high,
     playSound: true);
 
@@ -70,6 +71,9 @@ class MyApp extends StatelessWidget{
             theme: new ThemeData(
                 primarySwatch: Colors.blue,
                 visualDensity: VisualDensity.adaptivePlatformDensity,
+                textTheme: GoogleFonts.montserratTextTheme(
+                  Theme.of(context).textTheme,
+                )
             ),
             home: new SplashScreenView(
               navigateRoute:  new RootPage(auth: new Auth()),
@@ -115,7 +119,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                channel.description,
+                channelDescription: channel.description,
                 color: Colors.blue,
                 playSound: true,
                 icon: '@mipmap/ic_launcher',

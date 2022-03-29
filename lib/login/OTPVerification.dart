@@ -1,17 +1,20 @@
+import 'dart:math';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/adddress/AddressSearchPage.dart';
 import 'package:flutter_app/enums/Topics.dart';
+import 'package:flutter_app/login/FinishRegistrationPage.dart';
 import 'package:flutter_app/model/Credentials.dart';
 import 'package:flutter_app/model/User.dart';
 import 'package:flutter_app/service/AuthenticationService.dart';
+import 'package:flutter_app/service/NotificationService.dart';
 import 'package:flutter_app/service/UserService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
-import 'package:otp_text_field/otp_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_otp/flutter_otp.dart';
 import 'package:page_transition/page_transition.dart';
@@ -29,8 +32,19 @@ class OTPVerification extends StatefulWidget {
 
 class _OTPVerificationState extends State<OTPVerification> {
   FlutterOtp otp = FlutterOtp();
-  UserService userService = new UserService();
-  AuthenticationService authenticationService = new AuthenticationService();
+  NotificationService notificationService =new NotificationService();
+  int _otp;
+
+  void sendOtp(){
+    _otp = 1000 + Random().nextInt(9999 - 1000);
+    notificationService.sendOTP(widget.user.cellNumber,_otp.toString());
+  }
+  @override
+  void initState() {
+    super.initState();
+    sendOtp();
+    print('otp : '+ _otp.toString());
+  }
   @override
   Widget build(BuildContext context) {
     ProgressDialog progressDialog = new ProgressDialog(context,type: ProgressDialogType.Normal, isDismissible: false, showLogs: false);
@@ -48,88 +62,132 @@ class _OTPVerificationState extends State<OTPVerification> {
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 18.0.sp, fontWeight: FontWeight.w600)
     );
-    Future<void> _handleSignUp() async{
-      progressDialog.show();
-      String key  = await userService.save(widget.user);
-      if(key != null && key.isNotEmpty){
-        Credentials credentials = Credentials(userName: widget.user.email,password: widget.user.password,userKey: key);
-        await authenticationService.save(credentials);
 
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('userKey', key);
-        FirebaseMessaging.instance.subscribeToTopic(Topics.PROMOTIONS);
-        FirebaseMessaging.instance.subscribeToTopic(Topics.MARKETING);
-        progressDialog.hide();
-        Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: AddressSearchPage(title: "Find Address",user: widget.user,)),);
-      }else{
-        progressDialog.hide();
-        Fluttertoast.showToast(msg: "UserName with email already exists",toastLength: Toast.LENGTH_LONG);
-      }
+    _verifyOtp(int verificationCode){
+        bool matches = _otp == verificationCode;
+        if(matches){
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: FinishRegistrationPage(title: "Secure Account",user: widget.user,)),);
+        }else{
+          Fluttertoast.showToast(msg: "Incorrect OTP entered",toastLength: Toast.LENGTH_LONG);
+        }
     }
     final topAppBar = NewGradientAppBar(
       elevation: 0.1.sp,
       gradient: LinearGradient(colors: [Colors.cyan, Colors.indigo]),
-      title: Text("Delivery or Collection"),
+      title: Text(widget.title),
     ); //AppBar
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: topAppBar,
-        body:Center(
+        body: Container(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              OTPTextField(
-                length: 5,
-                width: MediaQuery.of(context).size.width,
-                fieldWidth: 80,
-                style: TextStyle(
-                    fontSize: 17
+              Padding(
+                padding: EdgeInsets.only(top: 35.0.sp,left: 10.0.sp),
+                child: new Text(
+                  'We sent you an OTP',
+                  style: new TextStyle(
+                    fontSize: 17.0.sp,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                textFieldAlignment: MainAxisAlignment.spaceAround,
-                fieldStyle: FieldStyle.underline,
-                onCompleted: (pin) {
-                  print("Completed: " + pin);
-                 bool matches = otp.resultChecker(int.parse(pin));
-                 if(matches){
-                   _handleSignUp();
-                 }else{
-                   Fluttertoast.showToast(msg: "Incorrect OTP entered",toastLength: Toast.LENGTH_LONG);
-                 }
-                },
               ),
-              new InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: new Container(
-                    height: 50.0.sp,
-                    width: 150.sp,
-                    margin: EdgeInsets.only(
-                        top: 10.0.sp,
-                        right: 10.0.sp,
-                        bottom: 10.0.sp),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(5.0.sp)),
-                        gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.topRight,
-                            colors: TopWaveClipper
-                                .blueGradients)),
-                    child: Center(
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0.sp,left: 10.0.sp),
+                    child: new Text(
+                      'On number',
+                      style: new TextStyle(
+                        fontSize: 12.5.sp,
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0.sp,left: 5.0.sp),
+                    child: new Text(
+                      widget.user.cellNumber,
+                      style: new TextStyle(
+                        fontSize: 12.5.sp,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 50.0.sp),
+                child: OtpTextField(
+                  numberOfFields: 4,
+                  borderColor: Colors.blue,
+                  fieldWidth: 60.0.sp,
+                  //set to true to show as box or false to show as dash
+                  showFieldAsBox: true,
+                  //runs when every textfield is filled
+                  onSubmit: (String verificationCode){
+                    _verifyOtp(int.parse(verificationCode));
+                  }, // end onSubmit
+                ),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child:  Padding(
+                      padding: EdgeInsets.all(15.0.sp),
                       child: new Text(
-                        'Change Number',
-                        softWrap: true,
+                        'Change number?',
                         style: new TextStyle(
-                          fontSize: 15.0.sp,
-                          color: Colors.white,
+                          fontSize: 12.5.sp,
+                          color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
-                        textAlign: TextAlign.start,
                       ),
-                    )),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      sendOtp();
+                      Fluttertoast.showToast(msg: "Code resent successfully",toastLength: Toast.LENGTH_LONG);
+                    },
+                    highlightColor: Colors.orange,
+                    child: Padding(
+                      padding: EdgeInsets.all(15.0.sp),
+                      child: new Text(
+                        'Resend Code?',
+                        style: new TextStyle(
+                          fontSize: 12.0.sp,
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              Center(
+                child:  Padding(
+                padding: EdgeInsets.only(top: 10.0.sp,left: 10.0.sp),
+                child: new Text(
+                  'This helps us verify every user on our app',
+                  style: new TextStyle(
+                    fontSize: 12.0.sp,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),)
             ],
           ),
-        ));
+        ) ,);
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/HomePage.dart';
 import 'package:flutter_app/auth/Authentication.dart';
-import 'package:flutter_app/login/RegistrationPage.dart';
+import 'package:flutter_app/login/FinishRegistrationPage.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/model/Credentials.dart';
 import 'package:flutter_app/model/User.dart';
@@ -173,23 +173,23 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               new Stack(
                 children: <Widget>[
-                  new ClipPath(
-                    clipper: TopWaveClipper(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: TopWaveClipper.orangeGradients,
-                            begin: Alignment.topLeft,
-                            end: Alignment.center),
-                      ),
-                      height: MediaQuery.of(context).size.height.sp / 2.7.sp,
-                    ),
-                  ),//ClipPath
+                  // new ClipPath(
+                  //   clipper: TopWaveClipper(),
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //       gradient: LinearGradient(
+                  //           colors: TopWaveClipper.orangeGradients,
+                  //           begin: Alignment.topLeft,
+                  //           end: Alignment.center),
+                  //     ),
+                  //     height: MediaQuery.of(context).size.height.sp / 2.7.sp,
+                  //   ),
+                  // ),//ClipPath
                   new Center(
                     child: Container(
                       width: 100.0.sp,
                       height: 100.0.sp,
-                      margin: EdgeInsets.only(top: 120.sp),
+                      margin: EdgeInsets.only(top: 70.sp,bottom: 20.0.sp),
                       decoration: new BoxDecoration(
                         image: new DecorationImage(
                           fit: BoxFit.fill,
@@ -207,11 +207,11 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10.0.sp),
                       child:emailField,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(10.0.sp),
                       child: passwordField,
                     ),
                   ],
@@ -264,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: EdgeInsets.only(top:20.sp),
                 child:  InkWell(
                     onTap: (){
-                      Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child:RegistrationStepPage(title: "Register",)),);
+                      Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child:RegistrationStepPage(title: "New Account",)),);
                     },
                     child: new Center(child:  Text.rich(
                         TextSpan(
