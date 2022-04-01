@@ -257,15 +257,15 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 10.0.sp,
+                            elevation: 5.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Row(
                                   children: <Widget>[
                                     Container(
-                                      width: 65.0.sp,
-                                      height: 65.0.sp,
+                                      width: 40.0.sp,
+                                      height: 40.0.sp,
                                       margin: EdgeInsets.all(8.0.sp),
                                       decoration: new BoxDecoration(
                                         shape: BoxShape.circle,
@@ -283,7 +283,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                             : '',
                                         softWrap: true,
                                         style: new TextStyle(
-                                            fontSize: 16.0.sp,
+                                            fontSize: 15.0.sp,
                                             color: Colors.grey[700],
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.start,
@@ -301,7 +301,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         : '',
                                     softWrap: true,
                                     style: new TextStyle(
-                                      fontSize: 14.0.sp,
+                                      fontSize: 12.0.sp,
                                       color: Colors.black87,
                                     ),
                                     textAlign: TextAlign.start,
@@ -314,7 +314,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 10.0.sp,
+                            elevation: 5.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -324,7 +324,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     'How we will contact you',
                                     softWrap: true,
                                     style: new TextStyle(
-                                        fontSize: 15.0.sp,
+                                        fontSize: 14.0.sp,
                                         color: Colors.grey[700],
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.start,
@@ -338,7 +338,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         : '',
                                     softWrap: true,
                                     style: new TextStyle(
-                                      fontSize: 14.0.sp,
+                                      fontSize: 12.0.sp,
                                       color: Colors.black87,
                                     ),
                                     textAlign: TextAlign.start,
@@ -354,7 +354,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         : '',
                                     softWrap: true,
                                     style: new TextStyle(
-                                      fontSize: 14.0.sp,
+                                      fontSize: 12.0.sp,
                                       color: Colors.black87,
                                     ),
                                     textAlign: TextAlign.start,
@@ -367,7 +367,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 10.0.sp,
+                            elevation: 5.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -382,7 +382,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         'Address Details',
                                         softWrap: true,
                                         style: new TextStyle(
-                                            fontSize: 15.0.sp,
+                                            fontSize: 14.0.sp,
                                             color: Colors.grey[700],
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.start,
@@ -391,32 +391,24 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         onTap: () {
                                           Navigator.pop(context);
                                         },
-                                        child: new Container(
-                                            height: 30.0.sp,
-                                            width: 80.sp,
-                                            margin: EdgeInsets.only(
-                                                top: 10.0.sp,
-                                                right: 10.0.sp),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(5.0.sp)),
-                                                gradient: LinearGradient(
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.topRight,
-                                                    colors: TopWaveClipper
-                                                        .orangeGradients)),
-                                            child: Center(
-                                              child: new Text(
-                                                'Change',
-                                                softWrap: true,
-                                                style: new TextStyle(
-                                                  fontSize: 11.0.sp,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            )),
+                                        child: Container(
+                                          margin:EdgeInsets.only(top: 10.0,right: 5.0),
+                                          decoration: BoxDecoration(
+                                            gradient:LinearGradient(
+                                                colors: TopWaveClipper.orangeGradients,
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.center),
+                                            borderRadius: BorderRadius.circular(20.0),
+                                          ),
+                                          child: Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 22.0, vertical: 6.0),
+                                              child: Text("Change",
+                                                  style: TextStyle(color: Colors.white,fontSize: 10.0.sp)),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -433,7 +425,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: new Card(
-                            elevation: 10.0.sp,
+                            elevation: 5.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[

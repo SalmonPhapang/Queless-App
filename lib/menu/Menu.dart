@@ -178,10 +178,9 @@ class _MenuPageState extends State<MenuPage>
                         child: new Text(
                           menuItem.name,
                           style: new TextStyle(
-                              fontSize: 12.0.sp,
+                              fontSize: 13.0.sp,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Roboto'),
+                              fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -196,8 +195,7 @@ class _MenuPageState extends State<MenuPage>
                           style: new TextStyle(
                               fontSize: 10.0.sp,
                               color: Colors.grey[750],
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Roboto'),
+                              fontWeight: FontWeight.normal),
                           textAlign: TextAlign.start,
                         ),
                       ),
@@ -208,10 +206,9 @@ class _MenuPageState extends State<MenuPage>
                               'R' + menuItem.price.toString(),
                               softWrap: true,
                               style: new TextStyle(
-                                  fontSize: 12.0.sp,
+                                  fontSize: 11.0.sp,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Roboto'),
+                                  fontWeight: FontWeight.bold,),
                               textAlign: TextAlign.start,
                             ),
                             Container(

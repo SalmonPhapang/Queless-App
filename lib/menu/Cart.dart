@@ -211,6 +211,7 @@ class _CartPageState extends State<CartPage> {
           children: <Widget>[
             new Container(
               width : MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -227,16 +228,17 @@ class _CartPageState extends State<CartPage> {
                  new Container(
                     margin: EdgeInsets.only(top: 10.sp),
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 100.sp,
+                    height: MediaQuery.of(context).size.height - 80.sp,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(50.0.sp)),
                       color: Colors.white,
                     ),
-                    child: Stack(children: <Widget>[
+                    child: Stack(
+                      children: <Widget>[
                       new Column(
                         children: <Widget>[
                           Padding(
-                              padding: EdgeInsets.only(top: 30.0.sp),
+                              padding: EdgeInsets.only(top: 20.0.sp),
                               child :  ConstrainedBox(
                                 constraints: BoxConstraints(maxHeight: 420.sp , minHeight: 200.sp),
                                 child: ListView(
@@ -246,7 +248,7 @@ class _CartPageState extends State<CartPage> {
                                       "Cart Items",
                                       softWrap: true,
                                       style: new TextStyle(
-                                          fontSize: 20.0.sp,
+                                          fontSize: 15.0.sp,
                                           color: Colors.black,
                                           fontWeight: FontWeight.bold
                                       ),
@@ -279,10 +281,11 @@ class _CartPageState extends State<CartPage> {
                             children: <Widget>[
                               Container(
                                 width: MediaQuery.of(context).size.width,
+                                margin: EdgeInsets.only(bottom: 10.0.sp),
                                 child:Column(children: generateOrderTotals(bloc),),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(bottom: 5.sp),
+                                padding: EdgeInsets.only(bottom: 10.sp),
                                 child: new Text(
                                   "Estimated preparation time +- 20 min",
                                   softWrap: true,
@@ -306,9 +309,10 @@ class _CartPageState extends State<CartPage> {
                                   child: new Container(
                                     width: MediaQuery.of(context).size.width,
                                     height: 40.0.sp,
-                                    padding: EdgeInsets.only(top: 14.sp),
+                                    margin: EdgeInsets.all(10.sp),
+                                    padding: EdgeInsets.only(top: 10.sp),
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(50.0.sp),topRight: Radius.circular(50.0.sp)),
+                                        borderRadius: BorderRadius.all(Radius.circular(10.0.sp)),
                                         gradient: LinearGradient(
                                             begin: Alignment.topLeft,
                                             end: Alignment.topRight,
@@ -322,7 +326,7 @@ class _CartPageState extends State<CartPage> {
                                       'Order',
                                       softWrap: true,
                                       style: new TextStyle(
-                                          fontSize: 19.0.sp,
+                                          fontSize: 15.0.sp,
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold
                                       ),

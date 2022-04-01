@@ -47,23 +47,21 @@ class _HomePageState extends State<HomePage> {
   Future<void> _futureController;
   var _scrollController = ScrollController();
   FeedService _feedService = new FeedService();
-  ClientService _clientService = new ClientService();
   AddressService _addressService = new AddressService();
   final storage = new LocalStorage('Posts.json');
   DateFormat format = DateFormat('yyyy-MM-dd HH:mm:ss');
-  //DateFormat get _dateFormat => DateFormat('EEE, d MMM yyyy HH:mm:ss', 'en_US');
-  int pageSize = 20;
+  String currentPositionKey;
+  int pageSize = 10;
   @override
   void initState() {
     super.initState();
     FirebaseDatabase.instance.setPersistenceEnabled(true);
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        // Perform your task
-        // getPostsPaginated(postList.first.key, pageSize);
-        // setState(() {});
-      }
-    });
+    // _scrollController..addListener(() {
+    //     var triggerFetchMoreSize = 0.8 * _scrollController.position.maxScrollExtent;
+    //     if (_scrollController.position.pixels > triggerFetchMoreSize) {
+    //       loadMore();
+    //     }
+    //   });
   }
   @override
   Widget build(BuildContext context) {
@@ -107,6 +105,9 @@ class _HomePageState extends State<HomePage> {
               itemCount: postList.length,
               builder: (BuildContext context, int index) {
                 return InViewNotifierWidget(id: '$index', builder: (BuildContext context, bool isInView, Widget child){
+                  if(postList.elementAt(index).key == currentPositionKey && isInView){
+                    loadMore();
+                  }
                   return Container(
                       alignment: Alignment.center,
                       child: PostsUI(isInView,index,postList.elementAt(index).clientKey,postList.elementAt(index).title, postList.elementAt(index).summary, postList.elementAt(index).client.address.city, postList.elementAt(index).client.address.suburb, postList.elementAt(index).client.profileUrl,postList.elementAt(index).image,postList.elementAt(index).date,postList.elementAt(index).video,Map())
@@ -143,52 +144,52 @@ class _HomePageState extends State<HomePage> {
     );//Scarfold
 
   }
-
-  // Future<Set> fetchFromCache() async {
-  //   await storage.ready;
-  //   storage.clear();
-  //   List<dynamic> cache = storage.getItem("feed");
-  //   if(cache == null){
-  //      return getPostsPaginatedLimit(pageSize);
-  //   }else{
-  //     for(var individualKey in cache){
-  //       postList.add(individualKey);
-  //     }
-  //   return getPostsPaginated(postList.first.key, pageSize);
-  //   }
-  // }
   Future<List> getPosts() async{
-    postList = await _feedService.fetchAll();
+    postList = await _feedService.fetchPaginateLimit(5);
     for(var post in postList){
       post.client.address = await _addressService.fetchByClientKey(post.client.key);
     }
     postList.sort((a,b) => format.parse(b.date).compareTo(format.parse(a.date)));
     await storage.ready;
     storage.setItem("feed", postList);
+
+    currentPositionKey = postList.last.key;
     return postList;
   }
-  // Future<Set> getPostsPaginatedLimit(int pageSize) async{
-  //   List<Feed> data = await _feedService.fetchPaginateLimit(pageSize);
-  //   for(var post in data){
-  //     post.client.address = await _addressService.fetchByClientKey(post.client.key);
-  //   }
-  //   postList.addAll(data.toSet());
-  //   await storage.ready;
-  //   storage.setItem("feed", postList);
-  //   return postList;
-  // }
+  Future<List> loadMore() async{
+    List<Feed> moreList  = await _feedService.fetchPaginate(currentPositionKey,5);
+    for(var post in moreList){
+      post.client.address = await _addressService.fetchByClientKey(post.client.key);
+    }
+    moreList.sort((a,b) => format.parse(b.date).compareTo(format.parse(a.date)));
+    postList.addAll(moreList);
+    setState(() {});
+    await storage.ready;
+    storage.setItem("feed", postList);
 
-  // Future<Set> getPostsPaginated(String startAt,int pageSize) async{
-  //   List<Feed> data = await _feedService.fetchPaginate(startAt,pageSize);
-  //   for(var post in data){
-  //     post.client.address = await _addressService.fetchByClientKey(post.client.key);
-  //   }
-  //   postList.addAll(data.toSet());
-  //   await storage.ready;
-  //   storage.setItem("feed", postList);
-  //   return postList;
-  // }
+    currentPositionKey = postList.last.key;
+    return postList;
+  }
+  String timeBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
 
+
+    Duration difference = to.difference(from);
+    if (difference.inSeconds < 5) {
+      return "Just now";
+    } else if (difference.inMinutes < 1) {
+      return "${difference.inSeconds}s ago";
+    } else if (difference.inHours < 1) {
+      return "${difference.inMinutes}m ago";
+    } else if (difference.inHours < 24) {
+      return "${difference.inHours}h ago";
+    } else if(difference.inDays < 31){
+      return "${difference.inDays}d ago";
+    }else{
+      return "${(difference.inDays/30).floor()} months ago";
+    }
+  }
   Widget PostsUI(bool inView,int index,String clientKey,String name,String bio,String city,String suburb,String profileUrl,String image,String date,bool isVideo,Map menu){
     return new Card(
       elevation: 5.0.sp,
@@ -229,8 +230,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(title: "Details",uniqueKey: clientKey,)),);
                         },
                         child : Container(
-                          width: 65.0.sp,
-                          height: 65.0.sp,
+                          width: 40.0.sp,
+                          height: 40.0.sp,
                           margin: EdgeInsets.all(8.0.sp),
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
@@ -244,8 +245,8 @@ class _HomePageState extends State<HomePage> {
                         child: new Text(
                           name,
                           style: new TextStyle(
-                              fontSize: 17.0.sp,
-                              color: Colors.black87,
+                              fontSize: 14.0.sp,
+                              color: Color(0xFF2121210),
                               fontWeight: FontWeight.bold
                           ),
                           textAlign: TextAlign.start,
@@ -260,8 +261,8 @@ class _HomePageState extends State<HomePage> {
                               suburb,
                               style: new TextStyle(
                                   fontSize: 10.0.sp,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold
+                                  color: Color(0xFF757575),
+                                  fontWeight: FontWeight.normal
                               ),
                               textAlign: TextAlign.start,
                             ),
@@ -269,8 +270,8 @@ class _HomePageState extends State<HomePage> {
                               city,
                               style: new TextStyle(
                                   fontSize: 10.0.sp,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.bold
+                                  color: Color(0xFF757575),
+                                  fontWeight: FontWeight.normal
                               ),
                               textAlign: TextAlign.start,
                             )
@@ -281,19 +282,22 @@ class _HomePageState extends State<HomePage> {
                 ),//Row
               ],
             ),
-        new Container(
-          margin: EdgeInsets.all(10.0.sp),
-        child:  new Text(
-            bio,
-          style: new TextStyle(
-              fontSize: 10.0.sp,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold
-          ),
-          textAlign: TextAlign.justify,
-        ))
 
-
+             Row(
+               children: <Widget>[
+                 Padding(
+                     padding: EdgeInsets.only(top: 5.0.sp,bottom: 20.0.sp,left: 10.0.sp,right: 10.0.sp),
+                     child:  new Text(
+                       timeBetween(DateTime.parse(date), DateTime.now())+' - '+ bio,
+                       style: new TextStyle(
+                           fontSize: 11.0.sp,
+                           color: Color(0xFF757575),
+                           fontWeight: FontWeight.normal
+                       ),
+                       textAlign: TextAlign.justify,
+                     )),
+               ],
+             ),
           ],//[Widget]
         ),//Column
       ),//Container

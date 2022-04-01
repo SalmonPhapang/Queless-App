@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/menu/OrderCart.dart';
 import 'package:flutter_app/model/MenuItem.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -30,23 +31,23 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
     final instructionsField = TextField(
       maxLines: 2,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          contentPadding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 15.0),
           hintText: "Special Instrictions",
           border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(10.0.sp))),
     );// passwordField
     final topAppBar = NewGradientAppBar(
-      elevation: 0.1,
+      elevation: 0.1.sp,
       gradient: LinearGradient(colors: [Colors.cyan,Colors.indigo]),
       title: Text(widget.item.name),
       actions: <Widget>[
     new Center(
         child: Padding(
-        padding: EdgeInsets.only(right:10.0),
+        padding: EdgeInsets.only(right:10.0.sp),
         child: Text(
           "R"+widget.item.price.toString(),
           style: new TextStyle(
-              fontSize: 15.0,
+              fontSize: 15.0.sp,
               color: Colors.white,
               fontWeight: FontWeight.bold,
               fontFamily: 'Roboto'
@@ -58,11 +59,12 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: topAppBar,
-        body: new Container(
+        body: SingleChildScrollView(
+          child: new Container(
           alignment: Alignment.topCenter,
           child: new Card(
-            elevation: 15.0,
-            margin:EdgeInsets.all(10.0),
+            elevation: 15.0.sp,
+            margin:EdgeInsets.all(10.0.sp),
             child: new Column(
               crossAxisAlignment:CrossAxisAlignment.start ,
               mainAxisSize : MainAxisSize.min,
@@ -70,19 +72,18 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                 widget.item.image != null ||  widget.item.image != "" ?  Stack(
                   children: <Widget>[
                     Center(
-                      child: CachedNetworkImage(imageUrl: widget.item.image,fit:BoxFit.cover,height: 280 ,fadeInDuration: Duration(milliseconds: 1000),),
+                      child: CachedNetworkImage(imageUrl: widget.item.image,fit:BoxFit.cover,height: 150.sp ,fadeInDuration: Duration(milliseconds: 1000),),
                     ),
                   ],
-                ) : Center(child: Image.asset('assets/loader2.gif',height:280.0,fit: BoxFit.fitWidth,)),
+                ) : Center(child: Image.asset('assets/loader2.gif',height:280.0.sp,fit: BoxFit.fitWidth,)),
                 Padding(
-                    padding: EdgeInsets.only(top:20.0,left: 10.0,right: 10.0,bottom: 20.0),
+                    padding: EdgeInsets.only(top:10.0.sp,left: 10.0.sp,right: 10.0.sp,bottom: 10.0.sp),
                     child: Text(
                         widget.item.description,
                         style: new TextStyle(
-                            fontSize: 15.0,
+                            fontSize: 15.0.sp,
                             color: Colors.black87,
                             fontWeight: FontWeight.normal,
-                            fontFamily: 'Roboto'
                         )
                     )
                 ),
@@ -90,33 +91,31 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                        padding: EdgeInsets.only(top:20.0,left: 10.0,right: 10.0,bottom: 20.0),
+                        padding: EdgeInsets.only(top:15.0.sp,left: 10.0.sp,right: 10.0.sp,bottom: 10.0.sp),
                         child: Text(
                             "R"+widget.item.price.toString(),
                             style: new TextStyle(
-                                fontSize: 15.0,
+                                fontSize: 12.0.sp,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'Roboto'
                             )
                         )
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top:20.0,left: 10.0,right: 10.0,bottom: 20.0),
+                        padding: EdgeInsets.only(top:15.0.sp,left: 10.0.sp,right: 10.0.sp,bottom: 10.0.sp),
                         child: Text(
                             widget.item.quantity.toString()+" x "+widget.item.size.toString(),
                             style: new TextStyle(
-                                fontSize: 15.0,
+                                fontSize: 12.0.sp,
                                 color: Colors.black87,
                                 fontWeight: FontWeight.normal,
-                                fontFamily: 'Roboto'
                             )
                         )
                     ),
                 ],),
 
             Padding(
-              padding: EdgeInsets.only(left: 10.0,right: 10.0,bottom: 10.0),
+              padding: EdgeInsets.only(left: 10.0.sp,right: 10.0.sp,bottom: 20.0.sp),
               child: instructionsField,
             ),
                 Row(
@@ -131,7 +130,7 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                           }
                           ),
                       child: new Container(
-                          padding: const EdgeInsets.all(5.0),
+                          padding:  EdgeInsets.all(5.0.sp),
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
                             gradient:LinearGradient(
@@ -139,25 +138,24 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.center),
                           ),
-                          child: new Icon(Icons.remove, size: 13.0, color: Colors.white)),
+                          child: new Icon(Icons.remove, size: 13.0.sp, color: Colors.white)),
                     ),//............,
                     SizedBox(width: 20,),
                     Text('$quantity',
                         style: new TextStyle(
-                            fontSize: 15.0,
+                            fontSize: 15.0.sp,
                             color: Colors.black87,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'Roboto'
                         )
                     ),
-                    SizedBox(width: 20,),
+                    SizedBox(width: 20.sp,),
                     new InkWell(
                       onTap: () =>
                           this.setState(() => {
                             quantity++
                           }),
                       child: new Container(
-                          padding: const EdgeInsets.all(5.0),
+                          padding:  EdgeInsets.all(5.0.sp),
                           decoration: new BoxDecoration(
                             shape: BoxShape.circle,
                             gradient:LinearGradient(
@@ -165,19 +163,17 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                                 begin: Alignment.topLeft,
                                 end: Alignment.center),
                           ),
-                          child: new Icon(Icons.add, size: 13.0, color: Colors.white)),
+                          child: new Icon(Icons.add, size: 13.0.sp, color: Colors.white)),
                     ),//............
                   ],
                 ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.0,bottom: 20.0),
-              child: Center(
-                  child: RaisedButton(
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0),
-                    ),
-                    elevation: 10.0,
-                    onPressed: () {
+
+                Container(
+                  width: MediaQuery.of(context).size.width.sp,
+                  margin: EdgeInsets.only(top:20.0.sp,left: 5.0.sp,right: 5.0.sp,bottom: 20.0.sp),
+                  height: 40.0.sp,
+                  child:  FlatButton(
+                    onPressed: (){
                       if(bloc.clientKey == null || bloc.clientKey.contains(widget.item.clientKey)){
                         bloc.setClientKey(widget.item.clientKey);
                         if(bloc.addToCart(widget.item,quantity)) {
@@ -195,20 +191,27 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                             toastLength: Toast.LENGTH_SHORT,
                             textColor: Colors.white);
                       }
-
                     },
+                    child: new Text(
+                      "Add To Cart",
+                      style: new TextStyle(
+                          fontSize: 15.0.sp,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     color: Colors.blue,
-                    textColor: Colors.white,
-                    child: Text("Add To Cart".toUpperCase(),
-                        style: TextStyle(fontSize: 14)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(10.0.sp),
+                        side: BorderSide(color: Colors.blue)
+                    ),
                   ),
-                )
-            )
-
+                ),
               ],//Column Children
             )//Column,
         ),
-        )
+        ))
     );
   }
 }

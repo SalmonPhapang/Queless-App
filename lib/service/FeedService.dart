@@ -20,6 +20,16 @@ class FeedService {
   }
     return feeds;
   }
+  Future<List<Feed>> fetchPages(String startAt,int pageSize) async{
+    List<Feed> feeds = [];
+    final response = await dio.get(path+'/fetch/client/all/$startAt/$pageSize');
+    if(response.statusCode == HttpStatus.ok){
+      for(var individualKey in response.data){
+        feeds.add(Feed.fromJson(individualKey));
+      }
+    }
+    return feeds;
+  }
   Future<List<Feed>> fetchPaginate(String startAt,int pageSize) async{
     List<Feed> feeds = [];
     final response = await dio.get(path+'/fetch/client/all/$startAt/$pageSize');
