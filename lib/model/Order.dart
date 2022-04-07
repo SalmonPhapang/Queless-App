@@ -1,4 +1,5 @@
 import 'package:flutter_app/model/OrderItem.dart';
+import 'package:flutter_app/model/Transaction.dart';
 
 import 'Address.dart';
 
@@ -36,13 +37,13 @@ class Order{
     'userKey': userKey,
     'clientKey': clientKey,
     'addressKey': addressKey,
+    'orderItems': orderItems,
     'collection': collection,
     'delivery': delivery,
     'fee': fee,
     'subTotal': subTotal,
     'total':total,
-    'driverTip': driverTip,
-    'orderItems': orderItems
+    'driverTip': driverTip
   };
 
 }

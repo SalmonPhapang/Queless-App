@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/menu/OrderTracking.dart';
 import 'package:flutter_app/model/Order.dart';
+import 'package:flutter_app/model/Transaction.dart';
+import 'package:flutter_app/service/TransactionService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,8 +34,10 @@ class _PaymentWebviewState extends State<PaymentWebview> {
   String status;
   String taxReference;
   OrderService orderService = new OrderService();
+  TransactionService transactionService = new TransactionService();
   NotificationService notificationService = new NotificationService();
   ProgressDialog progressDialog;
+  Transaction transaction = Transaction();
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +75,8 @@ class _PaymentWebviewState extends State<PaymentWebview> {
       progressDialog.show();
       String orderKey = await orderService.save(this.widget.order);
       if (orderKey != null && orderKey.isNotEmpty) {
+        transaction.orderKey = orderKey;
+        transactionService.save(transaction);
         Order freshOrder = await orderService.fetchByKey(orderKey);
         dto.Notification notification = new dto.Notification();
         notification.userType = 'CLIENT';
@@ -108,10 +114,11 @@ class _PaymentWebviewState extends State<PaymentWebview> {
           },
           onLoadStart: (controller, url) {
             if(url.toString().contains(redirectUrl)) {
-              this.status = url.queryParameters['status'];
+              String status = url.queryParameters['status'];
               if (status.contains("successful")) {
-                this.transactionID = url.queryParameters['transaction_id'];
-                this.taxReference = url.queryParameters['tx_ref'];
+                transaction.transactionID = url.queryParameters['transaction_id'];
+                transaction.taxReference  = url.queryParameters['tx_ref'];
+                transaction.status = status;
                 paymentSuccessful();
               } else {
                 Navigator.pop(context);
