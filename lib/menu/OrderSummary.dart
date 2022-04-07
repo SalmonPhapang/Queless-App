@@ -10,13 +10,13 @@ import 'package:flutter_app/model/NotificationDTO.dart' as dto;
 import 'package:flutter_app/model/Order.dart';
 import 'package:flutter_app/model/OrderItem.dart';
 import 'package:flutter_app/model/User.dart';
+import 'package:flutter_app/payment/PaymentWebviewPage.dart';
 import 'package:flutter_app/service/AddressService.dart';
 import 'package:flutter_app/service/ClientService.dart';
 import 'package:flutter_app/service/NotificationService.dart';
 import 'package:flutter_app/service/OrderService.dart';
 import 'package:flutter_app/service/UserService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,7 +37,6 @@ class _OrderSummaryState extends State<OrderSummary> {
   double itemTotal = 0.0;
   double fee = 30.0;
   double total = 0.0;
-  String orderType;
   String paymentMethod;
   Auth auth = new Auth();
   UserService userService = new UserService();
@@ -48,6 +47,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   User _user;
   Client _client;
   ProgressDialog progressDialog;
+  String currency="ZAR";
 
   List<Row> generateOrderTotals(OrderCart cart) {
     List<Row> rows = new List<Row>();
@@ -67,8 +67,8 @@ class _OrderSummaryState extends State<OrderSummary> {
             'Subtotal',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
-                color: Colors.black87,
+                fontSize: 12.0.sp,
+                color: Colors.black54,
                 fontWeight: FontWeight.normal),
             textAlign: TextAlign.end,
           ),
@@ -79,8 +79,8 @@ class _OrderSummaryState extends State<OrderSummary> {
             "R" + '$itemTotal',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
-                color: Colors.black87,
+                fontSize: 12.0.sp,
+                color: Colors.black54,
                 fontWeight: FontWeight.normal),
             textAlign: TextAlign.end,
           ),
@@ -96,8 +96,8 @@ class _OrderSummaryState extends State<OrderSummary> {
             'Service fee',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
-                color: Colors.black87,
+                fontSize: 12.0.sp,
+                color: Colors.black54,
                 fontWeight: FontWeight.normal),
             textAlign: TextAlign.end,
           ),
@@ -108,8 +108,8 @@ class _OrderSummaryState extends State<OrderSummary> {
             "R" + '$fee',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
-                color: Colors.black87,
+                fontSize: 12.0.sp,
+                color: Colors.black54,
                 fontWeight: FontWeight.normal),
             textAlign: TextAlign.end,
           ),
@@ -125,7 +125,7 @@ class _OrderSummaryState extends State<OrderSummary> {
             'Total',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 12.0.sp,
                 color: Colors.black87,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.end,
@@ -137,7 +137,7 @@ class _OrderSummaryState extends State<OrderSummary> {
             "R" + '$total',
             softWrap: true,
             style: new TextStyle(
-                fontSize: 13.0.sp,
+                fontSize: 12.0.sp,
                 color: Colors.black87,
                 fontWeight: FontWeight.bold),
             textAlign: TextAlign.end,
@@ -160,9 +160,7 @@ class _OrderSummaryState extends State<OrderSummary> {
     return _user;
   }
 
-
   saveNewOrder(OrderCart cart) async {
-    progressDialog.show();
     String userKey = await auth.getCurrentUser();
     Order order = new Order.from(
         userKey: userKey,
@@ -179,29 +177,70 @@ class _OrderSummaryState extends State<OrderSummary> {
         order.collection = false;
         order.delivery = true;
       }
-
-     String orderKey = await orderService.save(order);
-      if(orderKey != null && orderKey.isNotEmpty){
-        Order freshOrder = await orderService.fetchByKey(orderKey);
-
-        dto.Notification notification = new dto.Notification();
-        notification.userType = 'CLIENT';
-        notification.title = "New Order";
-        notification.message = "New order placed "+ freshOrder.orderNumber;
-        notification.userKey = order.clientKey;
-        await notificationService.send(notification);
-
-        freshOrder.address = cart.address;
-        cart.clearAll();
-        progressDialog.hide();
-        Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: freshOrder,willPop: false,)),
-              (route) => false,
-        );
-      }
-
-
+    Navigator.push(
+      context, PageTransition(type: PageTransitionType.rightToLeft, child:PaymentWebview(order: order,user: _user,)),
+    );
+    // final Customer customer = Customer(
+    //     name: "FLW Developer",
+    //     phoneNumber: "1234566677777",
+    //     email: "customer@customer.com");
+    //
+    // final Flutterwave flutterwave = Flutterwave(
+    //     context: context,
+    //     style: style,
+    //     publicKey: "FLWPUBK_TEST-4d51c9b6c241d89d40fb21e11ce4c5d8-X",
+    //     currency: currency,
+    //     txRef: "unique_transaction_reference",
+    //     amount: order.total.toString(),
+    //     customer: customer,
+    //     paymentOptions: "ussd, card, barter, payattitude",
+    //     customization: Customization(
+    //         title: "Test Payment"
+    //     ),
+    //     isTestMode: true);
+    //
+    //
+    // try {
+    //   final ChargeResponse response = await flutterwave.charge();
+    //   if (response != null) {
+    //     if (response.success) {
+    //       progressDialog.show();
+    //       String orderKey = await orderService.save(order);
+    //       if(orderKey != null && orderKey.isNotEmpty){
+    //         Order freshOrder = await orderService.fetchByKey(orderKey);
+    //
+    //         dto.Notification notification = new dto.Notification();
+    //         notification.userType = 'CLIENT';
+    //         notification.title = "New Order";
+    //         notification.message = "New order placed "+ freshOrder.orderNumber;
+    //         notification.userKey = order.clientKey;
+    //         await notificationService.send(notification);
+    //
+    //         freshOrder.address = cart.address;
+    //         cart.clearAll();
+    //         progressDialog.hide();
+    //         Navigator.pushAndRemoveUntil(
+    //           context,
+    //           PageTransition(type: PageTransitionType.rightToLeft, child: OrderTracker(order: freshOrder,willPop: false,)),
+    //               (route) => false,
+    //         );
+    //       }
+    //     } else {
+    //
+    //     }
+    //   } else {
+    //     // check message
+    //     print(response.toString());
+    //
+    //     // check status
+    //     print(response.status);
+    //
+    //     // check processor error
+    //     print(response);
+    //   }
+    // } catch (error, stacktrace) {
+    //   // handleError(error);
+    // }
   }
 
   @override
@@ -215,7 +254,7 @@ class _OrderSummaryState extends State<OrderSummary> {
     progressDialog = new ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: false);
     progressDialog.style(
-        message: 'Submitting Order',
+        message: 'Payment Successful, Submitting Order',
         borderRadius: 10.0.sp,
         backgroundColor: Colors.white,
         progressWidget: SpinKitCubeGrid(
@@ -257,7 +296,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 5.0.sp,
+                            elevation: 1.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -291,22 +330,6 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     ),
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      left:10.0.sp,top: 5.sp,bottom: 10.sp),
-                                  child: new Text(
-                                    _user != null
-                                        ? "Contact Number : " +
-                                        _client.cellNumber.trim()
-                                        : '',
-                                    softWrap: true,
-                                    style: new TextStyle(
-                                      fontSize: 12.0.sp,
-                                      color: Colors.black87,
-                                    ),
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -314,18 +337,18 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 5.0.sp,
+                            elevation: 1.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(left:5.sp,bottom: 10.sp, top: 10.sp),
                                   child: new Text(
-                                    'How we will contact you',
+                                    'Contact details',
                                     softWrap: true,
                                     style: new TextStyle(
-                                        fontSize: 14.0.sp,
-                                        color: Colors.grey[700],
+                                        fontSize: 13.0.sp,
+                                        color: Colors.black87,
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.start,
                                   ),
@@ -339,7 +362,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     softWrap: true,
                                     style: new TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: Colors.black87,
+                                      color: Colors.black54,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -355,7 +378,7 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     softWrap: true,
                                     style: new TextStyle(
                                       fontSize: 12.0.sp,
-                                      color: Colors.black87,
+                                      color: Colors.black54,
                                     ),
                                     textAlign: TextAlign.start,
                                   ),
@@ -364,10 +387,11 @@ class _OrderSummaryState extends State<OrderSummary> {
                             ),
                           ),
                         ),
+                        cart.orderTypeMethod.contains("Delivery")?
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
-                            elevation: 5.0.sp,
+                            elevation: 1.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -382,8 +406,8 @@ class _OrderSummaryState extends State<OrderSummary> {
                                         'Address Details',
                                         softWrap: true,
                                         style: new TextStyle(
-                                            fontSize: 14.0.sp,
-                                            color: Colors.grey[700],
+                                            fontSize: 13.0.sp,
+                                            color: Colors.black87,
                                             fontWeight: FontWeight.bold),
                                         textAlign: TextAlign.start,
                                       ),
@@ -414,18 +438,23 @@ class _OrderSummaryState extends State<OrderSummary> {
                                   ),
                                 ),
                                 ListTile(
-                                  title: Text('${cart.address.nickName}'),
-                                  subtitle:Text('${cart.address.houseNumber} ${cart.address.streetName} ${cart.address.suburb} ${cart.address.city}  ${cart.address.province} ${cart.address.code}') ,
+                                  title: Text('${cart.address.nickName}',style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    color: Colors.black87,)),
+                                  subtitle:Text('${cart.address.houseNumber} ${cart.address.streetName} ${cart.address.suburb} ${cart.address.city}  ${cart.address.province} ${cart.address.code}',
+                                      style: TextStyle(
+                                          fontSize: 11.0.sp,
+                                          color: Colors.black54,)) ,
                                 ),
                               ],
                             ),
                           ),
-                        ),
+                        ): Container(),
 
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: new Card(
-                            elevation: 5.0.sp,
+                            elevation: 1.0.sp,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -470,6 +499,41 @@ class _OrderSummaryState extends State<OrderSummary> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           child: Card(
+                            elevation: 1.0.sp,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(left:5.sp,bottom: 10.sp, top: 10.sp),
+                                  child: new Text(
+                                    'Order method',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                        fontSize: 13.0.sp,
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.bold),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left:10.0.sp,top: 5.sp,bottom: 10.sp),
+                                  child: new Text(cart.orderTypeMethod.toString(),
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                      fontSize: 12.0.sp,
+                                      color: Colors.black54,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Card(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -479,81 +543,61 @@ class _OrderSummaryState extends State<OrderSummary> {
                                       bottom: 10.sp,
                                       top: 20.sp),
                                   child: new Text(
-                                    'Available Payment Options',
+                                    'Payment Options',
                                     softWrap: true,
                                     style: new TextStyle(
-                                        fontSize: 15.0.sp,
-                                        color: Colors.grey[700],
+                                        fontSize: 13.0.sp,
+                                        color: Colors.black87,
                                         fontWeight: FontWeight.bold),
                                     textAlign: TextAlign.start,
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(bottom: 10.0),
-                                  child: Center(
-                                    child: ToggleSwitch(
-                                      totalSwitches: 2,
-                                      minHeight: 35.sp,
-                                      minWidth: 150.sp,
-                                      cornerRadius: 5.0.sp,
-                                      activeBgColor: [Colors.blue],
-                                      activeFgColor: Colors.white,
-                                      inactiveBgColor: Colors.blue,
-                                      inactiveFgColor: Colors.white,
-                                      labels: ['Cash', 'Speed Point'],
-                                      iconSize: 12.sp,
-                                      icons: [
-                                        FontAwesomeIcons.moneyBillWave,
-                                        FontAwesomeIcons.creditCard,
-                                      ],
-                                      onToggle: (index) {
-                                        print("index" + index.toString());
-                                        switch (index) {
-                                          case 0:
-                                            setState(() {
-                                              paymentMethod = 'Cash';
-                                            });
-                                            break;
-                                          case 1:
-                                            setState(() {
-                                              paymentMethod = 'Speed Point';
-                                            });
-                                            break;
-                                        }
-                                      },
-                                    ),
+                                  padding: EdgeInsets.only(
+                                      left: 10.sp,
+                                      bottom: 10.sp,),
+                                  child: new Text(
+                                    'Card only',
+                                    softWrap: true,
+                                    style: new TextStyle(
+                                        fontSize: 12.0.sp,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.normal),
+                                    textAlign: TextAlign.start,
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           ),
                         ),
                         new InkWell(
                             onTap: () {
-                              saveNewOrder(cart);
+                             saveNewOrder(cart);
                             },
                             child: new Container(
-                                height: 50.0.sp,
+                                height: 40.0.sp,
                                 width: MediaQuery.of(context).size.width,
                                 margin: EdgeInsets.all(10.0.sp),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(
-                                        Radius.circular(5.0.sp)),
+                                        Radius.circular(10.0.sp)),
                                     gradient: LinearGradient(
                                         begin: Alignment.topLeft,
                                         end: Alignment.topRight,
-                                        colors: TopWaveClipper
-                                            .orangeGradients)),
+                                        colors: [
+                                          Colors.cyan,
+                                          Colors.indigo,
+                                        ])),
                                 child: Center(
                                   child: new Text(
-                                    'Check out',
+                                    'Make Payment',
                                     softWrap: true,
                                     style: new TextStyle(
-                                      fontSize: 15.0.sp,
+                                      fontSize: 13.0.sp,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
-                                    textAlign: TextAlign.start,
+                                    textAlign: TextAlign.center,
                                   ),
                                 )),
                           ),

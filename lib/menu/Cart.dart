@@ -211,7 +211,6 @@ class _CartPageState extends State<CartPage> {
           children: <Widget>[
             new Container(
               width : MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topLeft,
@@ -222,25 +221,21 @@ class _CartPageState extends State<CartPage> {
                       ]
                   )
               ),
-              child: new Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                 new Container(
-                    margin: EdgeInsets.only(top: 10.sp),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 80.sp,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(50.0.sp)),
-                      color: Colors.white,
-                    ),
-                    child: Stack(
-                      children: <Widget>[
+              child: Container(
+                  margin: EdgeInsets.only(top: 10.sp),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(50.0.sp)),
+                    color: Colors.white,
+                  ),
+                  child: Stack(
+                    children: <Widget>[
                       new Column(
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.only(top: 20.0.sp),
                               child :  ConstrainedBox(
-                                constraints: BoxConstraints(maxHeight: 420.sp , minHeight: 200.sp),
+                                constraints: BoxConstraints(maxHeight: 400.sp , minHeight: 200.sp),
                                 child: ListView(
                                   shrinkWrap: true,
                                   children: <Widget>[
@@ -276,7 +271,7 @@ class _CartPageState extends State<CartPage> {
                         ],
                       ),
                       Positioned(
-                          bottom: 0.0,
+                          bottom: 5.0,
                           child: Column(
                             children: <Widget>[
                               Container(
@@ -301,10 +296,14 @@ class _CartPageState extends State<CartPage> {
                                 alignment: Alignment.bottomCenter,
                                 child: new InkWell(
                                   onTap: (){
-                                    Navigator.push(
-                                      context,
-                                      PageTransition(type: PageTransitionType.rightToLeft, child:AddressPage(title: "Select Address",)),
-                                    );
+                                    if(bloc.orderTypeMethod.contains("Delivery")){
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(type: PageTransitionType.rightToLeft, child:AddressPage(title: "Select Address",)),
+                                      );
+                                    }else{
+                                      Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary()));
+                                    }
                                   },
                                   child: new Container(
                                     width: MediaQuery.of(context).size.width,
@@ -323,7 +322,7 @@ class _CartPageState extends State<CartPage> {
                                         )
                                     ),
                                     child: new Text(
-                                      'Order',
+                                      'Check out',
                                       softWrap: true,
                                       style: new TextStyle(
                                           fontSize: 15.0.sp,
@@ -338,8 +337,6 @@ class _CartPageState extends State<CartPage> {
                           )
                       ),
                     ],)
-                  ),
-                ],
               ),
             ),
 
