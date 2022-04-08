@@ -37,13 +37,14 @@ class _CartPageState extends State<CartPage> {
 
   Auth auth = new Auth();
   ProgressDialog progressDialog;
+  double minimumAmount = 100.0;
   @override
   void initState() {
     super.initState();
   }
   ListTile generateTiles(MenuItem item,int quantity){
     return ListTile(
-      title:Text(item.name,style: TextStyle(fontSize: 14.sp),textAlign: TextAlign.start,),
+      title:Text(item.name,style: TextStyle(fontSize: 12.sp),textAlign: TextAlign.start,),
       subtitle: Text('x'+quantity.toString(),style: TextStyle(fontSize: 11.sp)),
     );
   }
@@ -66,6 +67,7 @@ class _CartPageState extends State<CartPage> {
               Fluttertoast.showToast(msg: "item(s) removed");
               bloc.clear(item);
               if(bloc.cart.length == 0){
+                bloc.setClientKey(null);
                 Navigator.pop(context);
               }
             })
@@ -254,7 +256,7 @@ class _CartPageState extends State<CartPage> {
                                       child: new DataTable(
                                         sortAscending: true,
                                         columnSpacing: 20.0.sp,
-                                        dataRowHeight: 65.0.sp,
+                                        dataRowHeight: 85.0.sp,
                                         columns: <DataColumn>[
                                           DataColumn(label: Text(' ')),
                                           DataColumn(label: Text('Item') ),
@@ -296,13 +298,17 @@ class _CartPageState extends State<CartPage> {
                                 alignment: Alignment.bottomCenter,
                                 child: new InkWell(
                                   onTap: (){
-                                    if(bloc.orderTypeMethod.contains("Delivery")){
-                                      Navigator.push(
-                                        context,
-                                        PageTransition(type: PageTransitionType.rightToLeft, child:AddressPage(title: "Select Address",)),
-                                      );
+                                    if(bloc.total.toDouble() >= this.minimumAmount){
+                                      if(bloc.orderTypeMethod.contains("Delivery")){
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(type: PageTransitionType.rightToLeft, child:AddressPage(title: "Select Address",)),
+                                        );
+                                      }else{
+                                        Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary()));
+                                      }
                                     }else{
-                                      Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary()));
+                                      Fluttertoast.showToast(msg: "Minimum order total is R100",toastLength: Toast.LENGTH_LONG);
                                     }
                                   },
                                   child: new Container(

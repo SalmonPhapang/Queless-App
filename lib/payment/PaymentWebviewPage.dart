@@ -104,7 +104,7 @@ class _PaymentWebviewState extends State<PaymentWebview> {
           initialUrlRequest: URLRequest(
               url: Uri.parse("https://checkout.flutterwave.com/v3/hosted/pay"),
               method: 'POST',
-              body: Uint8List.fromList(utf8.encode("public_key=$publicKey&tx_ref=$taxReference&amount=$amount&currency=ZAR&customer[name]=$name&customer[email]=$email&meta[token]=54&redirect_url=$redirectUrl")),
+              body: Uint8List.fromList(utf8.encode("public_key=$publicKey&tx_ref=$taxReference&amount=$amount&currency=ZAR&customer[name]=$name&customer[email]=$email&redirect_url=$redirectUrl")),
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
               }

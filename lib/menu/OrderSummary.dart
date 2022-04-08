@@ -162,10 +162,11 @@ class _OrderSummaryState extends State<OrderSummary> {
 
   saveNewOrder(OrderCart cart) async {
     String userKey = await auth.getCurrentUser();
+
     Order order = new Order.from(
         userKey: userKey,
         clientKey: cart.clientKey,
-        addressKey: cart.address.key,
+        addressKey: cart.orderTypeMethod.contains("Delivery") ? cart.address.key:"",
         fee: fee,
         subTotal: itemTotal,
         total: total,
@@ -478,8 +479,8 @@ class _OrderSummaryState extends State<OrderSummary> {
                                     ),
                                     DataTable(
                                       sortAscending: true,
-                                      columnSpacing: 60.0.sp,
-                                      dataRowHeight: 65.0.sp,
+                                      columnSpacing: 28.0.sp,
+                                      dataRowHeight: 85.0.sp,
                                       columns: <DataColumn>[
                                         DataColumn(label: Text(' ')),
                                         DataColumn(label: Text('Item')),
@@ -619,7 +620,7 @@ class _OrderSummaryState extends State<OrderSummary> {
     return ListTile(
       title: Text(
         item.name,
-        style: TextStyle(fontSize: 14.sp),
+        style: TextStyle(fontSize: 12.sp),
         textAlign: TextAlign.start,
       ),
       subtitle: Text('x' + item.quantity.toString(),
@@ -639,7 +640,7 @@ class _OrderSummaryState extends State<OrderSummary> {
       ));
       DataCell nameCell = DataCell(generateTiles(item.menuItem));
       DataCell priceCell = DataCell(Padding(
-        padding: EdgeInsets.only(left: 12.0.sp),
+        padding: EdgeInsets.only(left: 10.0.sp),
         child: Text('R' + item.menuItem.price.toString()),
       ));
 

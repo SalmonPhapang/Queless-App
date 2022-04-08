@@ -198,8 +198,8 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                   new Row(
                                     children: <Widget>[
                                       Container(
-                                        width: 60.0.sp,
-                                        height: 60.0.sp,
+                                        width: 40.0.sp,
+                                        height: 40.0.sp,
                                         margin: EdgeInsets.all(5.0.sp),
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
@@ -219,7 +219,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                         child: new Text(
                                           clients[index].name,
                                           style: new TextStyle(
-                                              fontSize: 15.0.sp,
+                                              fontSize: 14.0.sp,
                                               color: Colors.black87,
                                               fontWeight:
                                               FontWeight.bold),
@@ -235,8 +235,8 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                               Column(
                                                 children: <Widget>[
                                                   Container(
-                                                    width: 35.sp,
-                                                    height: 35.sp,
+                                                    width: 30.sp,
+                                                    height: 30.sp,
                                                     child:  CircleAvatar(
                                                       backgroundColor: Colors.orange,
                                                       radius: 30,
@@ -264,8 +264,8 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                               Column(
                                                 children: <Widget>[
                                                   Container(
-                                                    width: 35.sp,
-                                                    height: 35.sp,
+                                                    width: 30.sp,
+                                                    height: 30.sp,
                                                     child:  CircleAvatar(
                                                       backgroundColor: Colors.blue,
                                                       radius: 30,
@@ -304,7 +304,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                           clients[index].distance.round().toString()+" Km",
                                           style: new TextStyle(
                                               fontSize: 10.0.sp,
-                                              color: Colors.grey[700],
+                                              color: Colors.black54,
                                               fontWeight:
                                               FontWeight.bold),
                                           textAlign: TextAlign.start,
@@ -316,7 +316,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                           "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString(),
                                           style: new TextStyle(
                                               fontSize: 10.0.sp,
-                                              color: Colors.grey[700],
+                                              color: Colors.black54,
                                               fontWeight:
                                               FontWeight.bold),
                                           textAlign: TextAlign.start,
