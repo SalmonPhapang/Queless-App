@@ -62,7 +62,7 @@ class _AddressPageState extends State<AddressPage> {
                         new InkWell(
                           onTap: () =>{
                              bloc.setAddress(address[index]),
-                             Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary()))
+                             Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OrderSummary(clientKey: bloc.clientKey,)))
                           },
                           child: Container(
                             margin:EdgeInsets.only(top: 10.0,right: 5.0),

@@ -26,11 +26,14 @@ import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
+import '../payment/PaymentPage.dart';
 import 'OrderCart.dart';
 
 class OrderSummary extends StatefulWidget {
+  OrderSummary({Key key, this.clientKey}) : super(key: key);
   @override
   _OrderSummaryState createState() => _OrderSummaryState();
+  final String clientKey;
 }
 
 class _OrderSummaryState extends State<OrderSummary> {
@@ -152,12 +155,16 @@ class _OrderSummaryState extends State<OrderSummary> {
   @override
   void initState() {
     super.initState();
-  }
+;  }
 
   Future<User> getUser() async {
     String userKey = await auth.getCurrentUser();
     _user = await userService.fetchByKey(userKey);
+    getClient(widget.clientKey);
     return _user;
+  }
+  getClient(String clientKey) async{
+    _client = await clientService.fetchByKey(clientKey);
   }
 
   saveNewOrder(OrderCart cart) async {
@@ -179,7 +186,7 @@ class _OrderSummaryState extends State<OrderSummary> {
         order.delivery = true;
       }
     Navigator.push(
-      context, PageTransition(type: PageTransitionType.rightToLeft, child:PaymentWebview(order: order,user: _user,)),
+      context, PageTransition(type: PageTransitionType.rightToLeft, child:PaymentPage(order: order,user: _user,)),
     );
     // final Customer customer = Customer(
     //     name: "FLW Developer",
@@ -274,12 +281,6 @@ class _OrderSummaryState extends State<OrderSummary> {
             color: Colors.black,
             fontSize: 18.0.sp,
             fontWeight: FontWeight.w600));
-
-    getClient()async{
-      _client = await clientService.fetchByKey(cart.clientKey);
-      setState(() {});
-    }
-    getClient();
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: topAppBar,

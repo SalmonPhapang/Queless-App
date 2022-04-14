@@ -27,10 +27,18 @@ class TransactionService {
     return transaction;
   }
 
-  Future<bool> save(Transaction transaction) async {
+  Future<String> save(Transaction transaction) async {
     final response = await dio.post(path + '/save',data: transaction);
     if(response.statusCode == HttpStatus.ok) {
       return response.data;
     }
+  }
+
+  Future<bool> verify(reference) async {
+    final response = await dio.get(path+'/verify/$reference');
+    if(response.statusCode == HttpStatus.ok){
+       return response.data;
+    }
+    return false;
   }
 }

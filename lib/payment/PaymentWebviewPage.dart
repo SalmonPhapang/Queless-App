@@ -42,7 +42,7 @@ class _PaymentWebviewState extends State<PaymentWebview> {
   @override
   Widget build(BuildContext context) {
     var cart = Provider.of<OrderCart>(context);
-    String taxReference = this.widget.order.orderNumber;
+    String taxReference = this.widget.order.key;
     String amount = this.widget.order.total.toString();
     String name = this.widget.user.name;
     String email = this.widget.user.email;
@@ -104,7 +104,7 @@ class _PaymentWebviewState extends State<PaymentWebview> {
           initialUrlRequest: URLRequest(
               url: Uri.parse("https://checkout.flutterwave.com/v3/hosted/pay"),
               method: 'POST',
-              body: Uint8List.fromList(utf8.encode("public_key=$publicKey&tx_ref=$taxReference&amount=$amount&currency=ZAR&customer[name]=$name&customer[email]=$email&redirect_url=$redirectUrl")),
+              body: Uint8List.fromList(utf8.encode("public_key=$publicKey&tx_ref=$taxReference&amount=$amount&currency=ZAR&country=ZA&customer[name]=$name&customer[email]=$email&redirect_url=$redirectUrl")),
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
               }
@@ -116,7 +116,7 @@ class _PaymentWebviewState extends State<PaymentWebview> {
             if(url.toString().contains(redirectUrl)) {
               String status = url.queryParameters['status'];
               if (status.contains("successful")) {
-                transaction.transactionID = url.queryParameters['transaction_id'];
+                // transaction.transactionID = url.queryParameters['transaction_id'];
                 transaction.taxReference  = url.queryParameters['tx_ref'];
                 transaction.status = status;
                 paymentSuccessful();
@@ -141,22 +141,14 @@ class _PaymentWebviewState extends State<PaymentWebview> {
   }
   showCancelledAlertDialog(BuildContext context) {
     AlertDialog alert = AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(
-            20.0.sp,
-          ),
-        ),
-      ),
-      contentPadding: EdgeInsets.only(
-        top: 20.0.sp,
-      ),
       title: Text("Cancelled",style: TextStyle(fontSize: 14.0.sp,color: Colors.black87),),
       content:Text("Oohps! Payment cancelled by user",style: TextStyle(fontSize: 14),textAlign: TextAlign.center,),
         actions: [
         TextButton(
           child: Text("Ok"),
-          onPressed:  () {},
+          onPressed:  () {
+            Navigator.pop(context);
+          },
         ),
       ],
     );

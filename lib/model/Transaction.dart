@@ -1,10 +1,10 @@
 class Transaction{
-  String key,orderKey,transactionID,status,taxReference;
-  Transaction({this.key,this.orderKey,this.transactionID,this.status,this.taxReference});
+  String key,orderKey,message,status,taxReference;
+  Transaction({this.key,this.orderKey,this.message,this.status,this.taxReference});
   Map<String, dynamic> toJson() => {
     'key': key,
     'orderKey': orderKey,
-    'transactionID': transactionID,
+    'message': message,
     'status': status,
     'taxReference': taxReference
   };
@@ -12,7 +12,7 @@ class Transaction{
     return Transaction(
       key: json['key'],
       orderKey: json['orderKey'],
-      transactionID: json['transactionID'],
+      message: json['message'],
       status: json['status'],
       taxReference: json['taxReference'],
     );
