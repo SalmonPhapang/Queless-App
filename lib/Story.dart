@@ -774,7 +774,9 @@ class OrderCardScrollWidget extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
-                     CachedNetworkImage(imageUrl: orders[i].orderItems[0].menuItem.image,fit:BoxFit.cover ,fadeInDuration: Duration(milliseconds: 1000),),
+                      orders[i].orderItems[0].menuItem != null ?
+                     CachedNetworkImage(imageUrl: orders[i].orderItems[0].menuItem.image,fit:BoxFit.cover ,fadeInDuration: Duration(milliseconds: 1000),)
+                      :Container(),
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Column(
@@ -786,32 +788,25 @@ class OrderCardScrollWidget extends StatelessWidget {
                                   horizontal: 16.0.sp, vertical: 8.0.sp),
                               child: Text('#${orders[i].orderNumber}',
                                   style: TextStyle(
-                                      color: Colors.grey[400],
-                                      fontSize: 18.0.sp,
-                                      fontFamily: "SF-Pro-Text-Regular")),
+                                      color: Colors.black54,
+                                      fontSize: 18.0.sp,)),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Padding(
-                                  padding:  EdgeInsets.only(
-                                      left: 12.0.sp, bottom: 12.0.sp),
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 22.0.sp, vertical: 6.0.sp),
-                                    decoration: BoxDecoration(
-                                        gradient:LinearGradient(
-                                            colors: TopWaveClipper.orangeGradients,
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.center),
-                                        borderRadius: BorderRadius.circular(20.0.sp)),
-                                    child: Text("Details",
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-
-                              ],
-                            )
+                            Padding(
+                              padding:  EdgeInsets.only(
+                                  left: 1.0.sp, bottom: 5.0.sp),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0.sp, vertical: 5.0.sp),
+                                decoration: BoxDecoration(
+                                    gradient:LinearGradient(
+                                        colors: TopWaveClipper.orangeGradients,
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.center),
+                                    borderRadius: BorderRadius.circular(20.0.sp)),
+                                child: Text("Details",
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ),
 
                           ],
                         ),
