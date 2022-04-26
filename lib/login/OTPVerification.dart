@@ -1,25 +1,16 @@
 import 'dart:math';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/adddress/AddressSearchPage.dart';
-import 'package:flutter_app/enums/Topics.dart';
 import 'package:flutter_app/login/FinishRegistrationPage.dart';
-import 'package:flutter_app/model/Credentials.dart';
 import 'package:flutter_app/model/User.dart';
-import 'package:flutter_app/service/AuthenticationService.dart';
 import 'package:flutter_app/service/NotificationService.dart';
-import 'package:flutter_app/service/UserService.dart';
-import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_otp/flutter_otp.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 class OTPVerification extends StatefulWidget {
   const OTPVerification({Key key,this.title,this.user}) : super(key: key);
 
@@ -31,7 +22,6 @@ class OTPVerification extends StatefulWidget {
 }
 
 class _OTPVerificationState extends State<OTPVerification> {
-  FlutterOtp otp = FlutterOtp();
   NotificationService notificationService =new NotificationService();
   int _otp;
 

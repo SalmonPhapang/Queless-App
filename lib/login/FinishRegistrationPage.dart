@@ -126,10 +126,9 @@ class _FinishRegistrationPageState extends State<FinishRegistrationPage> {
       progressDialog.show();
       String key  = await userService.save(widget.user);
 
-      Credentials credentials = Credentials(userName: widget.user.email,password: _password,userKey: key);
-      String credentialsKey = await authenticationService.save(credentials);
-
-      if(credentialsKey != null && credentialsKey.isNotEmpty){
+      if(key != null && key.isNotEmpty){
+        Credentials credentials = Credentials(userName: widget.user.email,password: _password,userKey: key);
+        await authenticationService.save(credentials);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('userKey', key);
         FirebaseMessaging.instance.subscribeToTopic(Topics.PROMOTIONS);
@@ -137,6 +136,7 @@ class _FinishRegistrationPageState extends State<FinishRegistrationPage> {
         progressDialog.hide();
         Navigator.push(context, MaterialPageRoute(builder: (context) => AddressSearchPage(title: "Find Address",user: widget.user,)),);
       }else{
+        progressDialog.hide();
         Fluttertoast.showToast(msg: "UserName with email already exists, Please go to login "+widget.user.email,toastLength: Toast.LENGTH_LONG);
       }
     }

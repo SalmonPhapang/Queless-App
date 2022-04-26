@@ -77,6 +77,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
       }
     }
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[100],
         appBar: topAppBar,
         body: new Container(

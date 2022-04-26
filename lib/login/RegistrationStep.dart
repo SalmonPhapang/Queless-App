@@ -16,6 +16,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../profile/PrivacyAndTermsPage.dart';
 import 'OTPVerification.dart';
 
 class RegistrationStepPage extends StatefulWidget {
@@ -344,22 +345,65 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
                     padding: EdgeInsets.only(top: 7.0.sp,left: 10.0.sp,right: 10.0.sp),
                     child: cellField,
                   ),
-                  ListTile(
-                    title: Text(
-                      'I agree with the Terms of Service & Privacy Policy',
-                      style: new TextStyle(
-                        fontSize: 11.0.sp,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Switch(
+                        onChanged: toggleSwitch,
+                        value: _terms,
+                        activeColor: Colors.orange,
+                        activeTrackColor: Colors.orange[100],
                       ),
-                    ),
-                    leading: Switch(
-                      onChanged: toggleSwitch,
-                      value: _terms,
-                      activeColor: Colors.orange,
-                      activeTrackColor: Colors.orange[100],
-                    )  ,
-                  ),
+                      Padding(
+                          padding: EdgeInsets.only(right: 5.0.sp),
+                          child: Text(
+                            'I agree with the',
+                            style: new TextStyle(
+                              fontSize: 11.0.sp,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => TermsPrivacyPage(title: "Privacy Policy",isTerms: false,)));
+                        },
+                        child: Text(
+                            "Terms of Service",
+                            style: TextStyle(
+                              fontSize: 11.0.sp,
+                              color: Colors.lightBlue,
+                              fontWeight: FontWeight.bold,
+                            )
+                        ),
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(left: 5.0.sp,right: 5.0.sp),
+                        child: Text(
+                            "&",
+                            style: TextStyle(
+                              fontSize: 11.0.sp,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.bold,
+                            )
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => TermsPrivacyPage(title: "Privacy Policy",isTerms: false,)));
+                        },
+                        child: Text(
+                            "Privacy Policy",
+                            style: TextStyle(
+                              fontSize: 11.0.sp,
+                              color: Colors.lightBlue,
+                              fontWeight: FontWeight.bold,
+                            )
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
@@ -382,6 +426,7 @@ class _RegistrationStepPageState extends State<RegistrationStepPage> {
                 ),
                 color: Colors.blue,
                 disabledColor: Colors.grey[300],
+                disabledTextColor: Colors.black54,
                 shape: RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(10.0.sp),
                     side: BorderSide(color: Colors.blue)

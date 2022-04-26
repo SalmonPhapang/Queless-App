@@ -160,7 +160,7 @@ class _OrderSummaryState extends State<OrderSummary> {
   Future<User> getUser() async {
     String userKey = await auth.getCurrentUser();
     _user = await userService.fetchByKey(userKey);
-    getClient(widget.clientKey);
+    await getClient(widget.clientKey);
     return _user;
   }
   getClient(String clientKey) async{
