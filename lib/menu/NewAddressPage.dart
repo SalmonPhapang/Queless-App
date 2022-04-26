@@ -71,8 +71,7 @@ class _NewAddressPageState extends State<NewAddressPage> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey[100],
         appBar: topAppBar,
-        body: new Container(
-            child: SingleChildScrollView(child:  new Form(
+        body: SingleChildScrollView(child:  new Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.disabled,
               child:new Card(
@@ -286,7 +285,6 @@ class _NewAddressPageState extends State<NewAddressPage> {
                         ],)
                   )),
             ))
-        )
     );
   }
 }

@@ -79,166 +79,190 @@ class _EditAddressPageState extends State<EditAddressPage> {
                       height: MediaQuery.of(context).size.height.sp,
                       child: new Column(
                         children: <Widget>[
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.nickName,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Nick Name",
-                                labelText: 'Nick Name',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                            onSaved: (String value) {
-                              widget.address.nickName = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Nick Name is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.nickName,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Nick Name",
+                                  labelText: 'Nick Name',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                              onSaved: (String value) {
+                                widget.address.nickName = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Nick Name is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
 
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.houseNumber,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "House NO",
-                                labelText: 'House NO',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.houseNumber = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'House NO is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.houseNumber,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "House NO",
+                                  labelText: 'House NO',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.houseNumber = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'House NO is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.streetName,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Street Name",
-                                labelText: 'Street Name',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.streetName = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Street Name is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.streetName,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Street Name",
+                                  labelText: 'Street Name',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.streetName = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Street Name is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.addressLine,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Address Line",
-                                labelText: 'Address Line',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.addressLine = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Address Line is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.addressLine,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Address Line",
+                                  labelText: 'Address Line',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.addressLine = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Address Line is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.suburb,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Suburb",
-                                labelText: 'Suburb',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.suburb = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Suburb is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.suburb,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Suburb",
+                                  labelText: 'Suburb',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.suburb = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Suburb is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.city,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "City",
-                                labelText: 'City',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.city = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'City is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.city,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "City",
+                                  labelText: 'City',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.city = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'City is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField
-                          TextFormField(
-                            obscureText: false,
-                            style: style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.province,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Province",
-                                labelText: 'Province',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
-                            onSaved: (String value) {
-                              widget.address.province = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Province is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style: style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.province,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Province",
+                                  labelText: 'Province',
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0.sp))),
+                              onSaved: (String value) {
+                                widget.address.province = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Province is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
-                          TextFormField(
-                            obscureText: false,
-                            style:style,
-                            keyboardType: TextInputType.text,
-                            initialValue:  widget.address.code,
-                            decoration: InputDecoration(
-                                contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
-                                hintText: "Postal Code",
-                                labelText: "Postal Code",
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
-                            onSaved: (String value) {
-                              widget.address.code = value;
-                            },
-                            validator: (String arg) {
-                              if(arg.isEmpty)
-                                return 'Postal Code is required';
-                              else
-                                return null;
-                            },
+                          Padding(
+                            padding: EdgeInsets.only(top: 10.0.sp),
+                            child: TextFormField(
+                              obscureText: false,
+                              style:style,
+                              keyboardType: TextInputType.text,
+                              initialValue:  widget.address.code,
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.fromLTRB(20.0.sp, 5.0.sp, 5.0.sp, 5.0.sp),
+                                  hintText: "Postal Code",
+                                  labelText: "Postal Code",
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
+                              onSaved: (String value) {
+                                widget.address.code = value;
+                              },
+                              validator: (String arg) {
+                                if(arg.isEmpty)
+                                  return 'Postal Code is required';
+                                else
+                                  return null;
+                              },
+                            ),
                           ),//nameField,
                           new InkWell(
                             onTap: () {

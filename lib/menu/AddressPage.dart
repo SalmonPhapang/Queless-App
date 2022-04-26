@@ -85,7 +85,7 @@ class _AddressPageState extends State<AddressPage> {
                         ),
                         new InkWell(
                           onTap: () =>{
-                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: EditAddressPage(title: "Edit",address: address[index],)))
+                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: EditAddressPage(title: "Edit Address",address: address[index],)))
                           },
                           child: Container(
                             margin:EdgeInsets.only(top: 10.0,right: 5.0),
