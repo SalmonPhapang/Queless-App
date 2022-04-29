@@ -149,8 +149,9 @@ class _MapsPageState extends State<MapsPage> {
                   shrinkWrap: true,
                   itemCount: clients.length,
                   itemBuilder: (context,int _index){
-                return Padding(padding: EdgeInsets.all(3.0.sp),
-                    child:  FadeIn((_index + 1).toDouble(),_boxes(clients[_index].profileUrl, double.parse(clients[_index].address.location.latitude),double.parse(clients[_index].address.location.longitude),clients[_index].name,clients[_index].address.suburb,clients[_index].address.city,clients[_index].distance))) ;
+                return Padding(
+                    padding: EdgeInsets.all(3.0.sp),
+                    child:  FadeIn((_index + 1).toDouble(),_boxes(clients[_index].profileUrl, double.parse(clients[_index].address  != null ? clients[_index].address.location.latitude : "0.0"),double.parse(clients[_index].address != null ? clients[_index].address.location.longitude : "0.0"),clients[_index].name,clients[_index].address != null ? clients[_index].address.suburb:"0.0",clients[_index].address != null ? clients[_index].address.city : "0.0",clients[_index].distance))) ;
               }) : null
             ),
           ],
