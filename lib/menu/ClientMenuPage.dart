@@ -141,16 +141,21 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                     children: <Widget>[
                                       InkWell(
                                         onTap: () {
-                                          bloc.setDeliveryFee(calculateDeliveryFee(clients[index].distance.round()).toDouble());
-                                          Navigator.push(
-                                            context,
-                                            PageTransition(type: PageTransitionType.rightToLeft, child:
-                                            MenuPage(
-                                              title: "Menu",
-                                              clientKey:
-                                              clients[index].key,
-                                            )),
-                                          );
+                                          if(clients[index].distance.round() > 30){
+                                            Fluttertoast.showToast(msg: "Sorry cannot order from store, too far away",toastLength: Toast.LENGTH_LONG);
+                                          }else{
+                                            bloc.setDeliveryFee(calculateDeliveryFee(clients[index].distance.round()).toDouble());
+                                            Navigator.push(
+                                              context,
+                                              PageTransition(type: PageTransitionType.rightToLeft, child:
+                                              MenuPage(
+                                                title: "Menu",
+                                                clientKey:
+                                                clients[index].key,
+                                              )),
+                                            );
+                                          }
+                                         
                                         },
                                         child: new Image(
                                           height: 200.sp,
@@ -301,7 +306,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                       Padding(
                                         padding: EdgeInsets.only(left: 18.0.sp,bottom: 10.0.sp),
                                         child: Text(
-                                          clients[index].distance.round().toString()+" Km",
+                                            clients[index].distance != null ? clients[index].distance.round().toString()+" Km" : "",
                                           style: new TextStyle(
                                               fontSize: 10.0.sp,
                                               color: Colors.black54,
@@ -313,7 +318,7 @@ class _ClientMenuPageState extends State<ClientMenuPage> {
                                       Padding(
                                         padding: EdgeInsets.only(right: 10.0.sp,bottom: 10.0.sp),
                                         child: Text(
-                                          "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString(),
+                                            clients[index].distance != null ? "Delivery fee R"+calculateDeliveryFee(clients[index].distance.round()).toString():"",
                                           style: new TextStyle(
                                               fontSize: 10.0.sp,
                                               color: Colors.black54,

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/enums/OrderStatus.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/model/Order.dart';
+import 'package:flutter_app/service/AddressService.dart';
 import 'package:flutter_app/service/OrderService.dart';
 import 'package:flutter_app/utils/TopWaveClipper.dart';
 import 'package:flutter_app/widgets/Avatar.dart';
 import 'package:flutter_app/widgets/ProgressBar.dart';
+import 'package:intl/intl.dart';
 import 'package:new_gradient_app_bar/new_gradient_app_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:page_transition/page_transition.dart';
@@ -30,7 +32,7 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
   final imageFour = "assets/images/wedding-dinner.png";
   final textFour = "Order Collected Enjoy :)";
   OrderService orderService = new OrderService();
-
+  AddressService addressService = new AddressService();
   @override
 
   void initState() {
@@ -224,26 +226,34 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
                   ]),
 
               Positioned(
-                  bottom: 0.0.sp,
+                  bottom: 1.0.sp,
                   child:  InkWell(
-                    child: Card(
-                      elevation: 10.0.sp,
-                      margin: EdgeInsets.all(5.0.sp),
-                      child: Container(
+                    child: new Container(
+                        height: 40.0.sp,
+                        width: MediaQuery.of(context).size.width - 10.0.sp,
+                        margin: EdgeInsets.all(5.0.sp),
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0.sp)),
                             gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.topRight,
-                                colors:TopWaveClipper.orangeGradients
-                            )
-                        ),
-                        width: MediaQuery.of(context).size.width.sp - 10.0.sp,
-                        height: 50.0.sp,
+                                colors: [
+                                  Colors.cyan,
+                                  Colors.indigo,
+                                ])),
                         child: Center(
-                          child: Text(' View Order #'+widget.order.orderNumber,style: TextStyle(color: Colors.white,fontSize: 16.0.sp),),
-                        ),
-                      ) ,
-                    ) ,
+                          child: new Text(
+                            'View Order #'+widget.order.orderNumber,
+                            softWrap: true,
+                            style: new TextStyle(
+                              fontSize: 13.0.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        )),
                     onTap: ()=>{
                       viewOrderBottomSheet(context)
                     },
@@ -269,7 +279,7 @@ class _OrderTrackerState extends State<OrderTracker> with TickerProviderStateMix
                 ),
                 new ListTile(
                   leading: new Icon(Icons.calendar_today_outlined),
-                  title: new Text(widget.order.address.houseNumber),
+                  title: new Text(widget.order.orderTime),
                 ),
                 new ListTile(
                     leading: new Icon(Icons.location_on_outlined),

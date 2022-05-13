@@ -223,7 +223,8 @@ class _SettingsPageState extends State<SettingsPage> {
     TextButton(
     child: Text("Continue"),
         onPressed:  () {
-            signOut();
+          Navigator.pop(context);
+          signOut();
         },
     ),
     TextButton(
@@ -250,7 +251,8 @@ class _SettingsPageState extends State<SettingsPage> {
         TextButton(
           child: Text("Continue"),
           onPressed:  () {
-              removeAccount();
+            Navigator.pop(context);
+            removeAccount();
           },
         ),
         TextButton(

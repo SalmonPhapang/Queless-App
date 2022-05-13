@@ -723,7 +723,7 @@ class CardScrollWidget extends StatelessWidget {
 class OrderCardScrollWidget extends StatelessWidget {
   var currentPage;
   var padding = 20.0.sp;
-  var verticalInset = 20.0.sp;
+  var verticalInset = 12.0.sp;
   OrderCardScrollWidget(this.currentPage);
 
   @override
@@ -752,7 +752,7 @@ class OrderCardScrollWidget extends StatelessWidget {
           var start = padding +
               max(
                   primaryCardLeft -
-                      horizontalInset * -delta * (isOnRight ? 15 : 1),
+                      horizontalInset * -delta * (isOnRight ? 5 : 1),
                   0.0);
 
           var cardItem = Positioned.directional(
@@ -771,45 +771,30 @@ class OrderCardScrollWidget extends StatelessWidget {
                 ]),
                 child: AspectRatio(
                   aspectRatio: cardAspectRatio,
-                  child: Stack(
-                    fit: StackFit.expand,
+                  child: Column(
                     children: <Widget>[
                       orders[i].orderItems[0].menuItem != null ?
-                     CachedNetworkImage(imageUrl: orders[i].orderItems[0].menuItem.image,fit:BoxFit.cover ,fadeInDuration: Duration(milliseconds: 1000),)
+                     CachedNetworkImage(imageUrl: orders[i].orderItems[0].menuItem.image,fit:BoxFit.contain ,fadeInDuration: Duration(milliseconds: 1000),)
                       :Container(),
-                      Align(
-                        alignment: Alignment.bottomLeft,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0.sp, vertical: 8.0.sp),
-                              child: Text('#${orders[i].orderNumber}',
-                                  style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 18.0.sp,)),
-                            ),
-                            Padding(
-                              padding:  EdgeInsets.only(
-                                  left: 1.0.sp, bottom: 5.0.sp),
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0.sp, vertical: 5.0.sp),
-                                decoration: BoxDecoration(
-                                    gradient:LinearGradient(
-                                        colors: TopWaveClipper.orangeGradients,
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.center),
-                                    borderRadius: BorderRadius.circular(20.0.sp)),
-                                child: Text("Details",
-                                    style: TextStyle(color: Colors.white)),
-                              ),
-                            ),
-
-                          ],
-                        ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.0.sp, vertical: 8.0.sp),
+                        child: Text('#${orders[i].orderNumber}',
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14.0.sp,)),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0.sp, vertical: 5.0.sp),
+                        decoration: BoxDecoration(
+                            gradient:LinearGradient(
+                                colors: TopWaveClipper.orangeGradients,
+                                begin: Alignment.topLeft,
+                                end: Alignment.center),
+                            borderRadius: BorderRadius.circular(20.0.sp)),
+                        child: Text("Details",
+                            style: TextStyle(color: Colors.white)),
                       )
                     ],
                   ),

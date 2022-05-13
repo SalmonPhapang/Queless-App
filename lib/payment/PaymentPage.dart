@@ -139,7 +139,7 @@ class _PaymentPageState extends State<PaymentPage> {
                  notificationService.send(notification);
                  notificationService.sendSms(orderKey);
 
-                freshOrder.address = this.widget.order.address;
+                freshOrder.address =  cart.address;
                 cart.clearAll();
                 progressDialog.hide();
                 Navigator.pushAndRemoveUntil(context,
