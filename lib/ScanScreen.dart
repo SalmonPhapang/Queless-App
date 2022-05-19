@@ -103,13 +103,9 @@ class _ScanState extends State<ScanScreen> {
         mini: false,
         child: new Icon(Icons.camera_enhance),
       ),
-      body: new Container(
-        child:Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Image.asset('assets/images/turnupQR.png',width: 400.0,height: 300.0,alignment: Alignment.center,)
-          ],
+      body: Container(
+        child:Center(
+          child: Image.asset('assets/images/turnupQR.png',width: 400.0,height: 300.0,alignment: Alignment.center,),
         )
       ),
     );

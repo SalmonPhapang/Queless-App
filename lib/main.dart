@@ -79,7 +79,7 @@ class MyApp extends StatelessWidget{
               navigateRoute:  new RootPage(auth: new Auth()),
               duration: 5000,
               imageSize: 130,
-              imageSrc: "assets/logo.png",
+              imageSrc: "assets/logo-launcher.png",
               text: "Welcome",
               textType: TextType.ColorizeAnimationText,
               textStyle: TextStyle(

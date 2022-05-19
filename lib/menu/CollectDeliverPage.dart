@@ -13,12 +13,12 @@ class CollectDeliveryPage extends StatefulWidget {
 }
 
 class _CollectDeliveryPageState extends State<CollectDeliveryPage> {
-  @override
-  void didChangeDependencies() {
-    precacheImage(AssetImage("assets/images/scooter.jpg"), context);
-    precacheImage(AssetImage("assets/images/store.jpg"), context);
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   precacheImage(AssetImage("assets/images/scooter.jpg"), context);
+  //   precacheImage(AssetImage("assets/images/store.jpg"), context);
+  //   super.didChangeDependencies();
+  // }
   @override
   Widget build(BuildContext context) {
     var bloc = Provider.of<OrderCart>(context);

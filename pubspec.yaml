@@ -11,7 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.4+11
+version: 1.4.6+13
 
 environment:
   sdk: ">=2.5.2 <3.0.0"
@@ -87,8 +87,8 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/logo.png"
-  image_path_android: "assets/logo.png"
+  image_path_ios: "assets/ic_launcher.png"
+  image_path_android: "assets/ic_launcher.png"
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
 
@@ -113,7 +113,8 @@ flutter:
   - assets/ic_launcher_2.png
   - assets/images/mase.png
   - assets/images/venus.png
-  - assets/logo.png
+  - assets/logo-launcher.png
+  - assets/ic_launcher.png
   - assets/confirm.png
   - assets/fried.png
   - assets/food-delivery.png
